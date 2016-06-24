@@ -40,7 +40,7 @@ module Panther
 
       # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       def authorize(model:, params:, revalidate: true)
-        if model.is_a?(::Contract::Base) && revalidate
+        if model.is_a?(Contract::Base) && revalidate
           model.errors.clear
           model.validate(params)
         end
@@ -66,7 +66,7 @@ module Panther
         end
 
         fail(
-          ::Operation::InvalidContractError,
+          InvalidContractError,
           contract.errors
         ) unless valid
       end
