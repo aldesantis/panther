@@ -1,6 +1,8 @@
 require 'reform'
 require 'dry-types'
 require 'roar'
+require 'roar/decorator'
+require 'roar/json'
 require 'multi_json'
 
 require 'panther/version'
