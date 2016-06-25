@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'reform'
 require 'dry-types'
 require 'roar'

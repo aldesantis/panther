@@ -1,6 +1,7 @@
+# frozen_string_literal: true
 module Panther
   module Controller
-    def self.included(klass)
+    def self.included(klass) # rubocop:disable Metrics/MethodLength
       klass.class_eval <<-'RUBY'
         protect_from_forgery with: :null_session
         respond_to :json

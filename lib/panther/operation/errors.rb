@@ -26,7 +26,9 @@ module Panther
         @user = user
         @action = action
 
-        super 'The current user is not authorized to perform the requested action'
+        super(
+          'The current user is not authorized to perform the requested action'
+        )
       end
 
       def as_json(_options)
