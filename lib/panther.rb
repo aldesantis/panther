@@ -23,5 +23,7 @@ require 'panther/representer/base'
 require 'panther/representer/collection'
 require 'panther/representer/pagination'
 
+require 'panther/controller'
+
 module Panther
 end
