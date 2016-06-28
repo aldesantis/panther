@@ -187,6 +187,11 @@ module API
 end
 ```
 
+The `#model` method returns the contract (for create and update operations) or
+record (for show and destroy operations) that is being operated on, while the
+`#user` method returns the `current_user` parameter that was passed to the
+operation.
+
 ### Operations
 
 Operations glue representers, contracts and policies together to perform tasks
@@ -208,6 +213,31 @@ to see how Panther works under the hood and how you can implement your own
 operations.
 
 ```ruby
+# app/services/api/v1/post/operation/index.rb
+module API
+  module V1
+    module Post
+      module Operation
+        class Index < ::Panther::Operation::Index
+        end
+      end
+    end
+  end
+end
+
+# app/services/api/v1/post/operation/show.rb
+module API
+  module V1
+    module Post
+      module Operation
+        class Show < ::Panther::Operation::Show
+        end
+      end
+    end
+  end
+end
+
+
 # app/services/api/v1/post/operation/create.rb
 module API
   module V1
@@ -248,32 +278,52 @@ module API
     end
   end
 end
+```
 
-# app/services/api/v1/post/operation/index.rb
+### Controllers
+
+Panther provides a module that can be included into a controller to expose a
+resource's operations:
+
+```ruby
+# app/controllers/api/v1/posts_controller.rb
 module API
   module V1
-    module Post
-      module Operation
-        class Index < ::Panther::Operation::Index
-          private
+    class PostsController < ApplicationController
+      include Panther::Controller
 
-          def collection(params)
-            params[:current_user].posts
-          end
-        end
+      actions :index, :show, :create, :update, :destroy
+
+      private
+
+      def operation_params
+        params.merge(current_user: current_user)
       end
     end
   end
 end
+```
 
-# app/services/api/v1/post/operation/show.rb
-module API
-  module V1
-    module Post
-      module Operation
-        class Show < ::Panther::Operation::Show
-        end
-      end
+In addition to the parameters provided by the API's consumer, we also pass the
+`current_user` parameter to the operation. It will be used by the policy to
+authorize the user's actions.
+
+Note that Panther makes no distinction between parameters passed by the consumer
+(that will usually be the `params` hash in Rails) and parameters passed by the
+developer, so you should ensure that there are no conflicting names and that
+any internal parameters overwrite the user-defined ones. This is part of
+Panther's design and will not change.
+
+### Routes
+
+All that's left now is to route to our operations:
+
+```ruby
+# config/routes.rb
+Rails.application.routes.draw do
+  namespace :api do
+    namespace :v1 do
+      resources :posts, only: %i(index show create update destroy)
     end
   end
 end
