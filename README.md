@@ -20,12 +20,90 @@ Or install it yourself as:
 
     $ gem install panther
 
-## Concepts
+## Usage
 
-Panther revolves around four core concepts: the contract, the operation, the
-policy and the representer.
+### Directory Structure
 
-### Representer
+Let's see how we can implement a simple CRUD API for a Post resource.
+
+Here's the directory structure we'll use:
+
+```console
+app/services/api/v1/post/
+├── contract
+│   ├── base.rb
+│   ├── create.rb
+│   └── update.rb
+├── operation
+│   ├── create.rb
+│   ├── destroy.rb
+│   ├── index.rb
+│   ├── show.rb
+│   └── update.rb
+├── policy.rb
+└── representer
+    ├── collection.rb
+    └── resource.rb
+```
+
+### Contracts
+
+Contracts take incoming data, parse it and validate it.
+
+Again, contracts are just [Reform](https://github.com/apotonick/reform) forms.
+
+```ruby
+# app/services/api/v1/post/contract/base.rb
+module API
+  module V1
+    module Post
+      module Contract
+        class Base < ::Panther::Contract::Base
+          property :user_id, writable: false
+          property :title, type: Coercible::String
+          property :body, type: Coercible::String
+
+          validates :title, presence: true
+          validates :body, presence: true
+        end
+      end
+    end
+  end
+end
+
+# app/services/api/v1/post/contract/create.rb
+module API
+  module V1
+    module Post
+      module Contract
+        class Create < Base
+        end
+      end
+    end
+  end
+end
+
+# app/services/api/v1/post/contract/create.rb
+module API
+  module V1
+    module Post
+      module Contract
+        class Update < Base
+          property :title, writable: false
+        end
+      end
+    end
+  end
+end
+```
+
+We have defined the `title` property as read-only in the `Update` contract. That
+means the title of a post can't be changed once a post is created.
+
+We have also defined an unwritable `user_id` property that will be used by the
+resource's policy to ensure the user is authorized to update/destroy a post.
+
+### Representers
 
 A representer's job is to render a resource in a specific format. Panther
 assumes you'll use JSON, but XML and other formats will work fine.
@@ -33,120 +111,178 @@ assumes you'll use JSON, but XML and other formats will work fine.
 Representers are nothing more than [Roar](https://github.com/apotonick/roar)
 decorators with some assumptions, so you can tweak them as you see fit.
 
-Panther also provides you with mixins for representing collection and pagination
-data.
-
-Here's what a representer looks like:
+Panther also provides mixins for representing collection and pagination data.
 
 ```ruby
-class UploadRepresenter < Panther::Representer::Base
-  property :id
-  property :user_id
-  property :purpose
-  property :file_url
-  property :metadata, exec_context: :decorator
-  property :created_at, exec_context: :decorator
-
-  def metadata
-    represented.file.metadata
+# app/services/api/v1/post/representer/collection.rb
+module API
+  module V1
+    module Post
+      module Representer
+        class Collection < ::Panther::Representer::Base
+          include ::Panther::Representer::Collection
+          include ::Panther::Representer::Pagination
+        end
+      end
+    end
   end
+end
 
-  def created_at
-    represented.created_at.to_i
+# app/services/api/v1/post/representer/resource.rb
+module API
+  module V1
+    module Post
+      module Representer
+        class Resource < ::Panther::Representer::Base
+          property :id
+          property :title
+          property :body
+        end
+      end
+    end
   end
 end
 ```
 
-### Contract
-
-Contracts take incoming data, parse it and validate it.
-
-Again, contracts are just [Reform](https://github.com/apotonick/reform) forms.
-
-Here's what a contract looks like:
-
-```ruby
-class CreateLinkContract < Panther::Contract::Base
-  property :user_id, type: Coercible::Int
-  property :url, type: Coercible::String
-
-  validates :user_id, presence: true
-  validates :url, presence: true
-end
-```
-
-### Policy
+### Policies
 
 Policies are POROs. They take a contract (or a model, if a contract is not
 needed) and a user object as input, and provide a set of predicates to determine
 whether the user is authorized to perform the given action on the resource.
 
-They are inspired to [Pundit](https://github.com/elabs/pundit) policies, but
+They are inspired by [Pundit](https://github.com/elabs/pundit) policies, but
 I didn't need any of Pundit's features, so I just reimplemented them from
 scratch.
 
-Here's what a policy looks like:
-
 ```ruby
-class UploadPolicy < Panther::Policy::Base
-  def show?
-    upload_belongs_to_user?
-  end
+# app/services/api/v1/post/policy.rb
+module API
+  module V1
+    module Post
+      class Policy < ::Panther::Policy::Base
+        def show?
+          true
+        end
 
-  def create?
-    upload_belongs_to_user?
-  end
+        def create?
+          true
+        end
 
-  def update?
-    upload_belongs_to_user?
-  end
+        def update?
+          post_belongs_to_user?
+        end
 
-  def destroy?
-    upload_belongs_to_user?
-  end
+        def destroy?
+          post_belongs_to_user?
+        end
 
-  private
+        private
 
-  def upload_belongs_to_user?
-    model.user_id.present? && model.user_id.to_i == user.id
+        def post_belongs_to_user?
+          model.user_id.present? && model.user_id == user.id
+        end
+      end
+    end
   end
 end
 ```
 
-### Operation
+### Operations
 
 Operations glue representers, contracts and policies together to perform tasks
 on a certain resource.
 
-Panther provides you with a set of default CRUD operations, but you're free to
-write your own.
+Panther provides default implementations for CRUD operations. The default
+operations make the following assumptions about the resources:
 
-Here's what an operation looks like:
+- They have a policy with methods for all supported actions
+- They have both a `Resource` and a `Collection` representer
+- They have a contract for the `Create` and `Update` actions (if supported)
+
+Of course, you're free to write your own custom CRUD operations. You can also
+write non-CRUD operations, although that's usually a sign something's wrong with
+your API architecture.
+
+If you want, you can take a look at the [default operations](https://github.com/alessandro1997/panther/tree/master/lib/panther/operation)
+to see how Panther works under the hood and how you can implement your own
+operations.
 
 ```ruby
-class CreateUserOperation < Panther::Operation::Base
-  def run(params)
-    user = User.new
-    contract = CreateUserContract.new(user)
+# app/services/api/v1/post/operation/create.rb
+module API
+  module V1
+    module Post
+      module Operation
+        class Create < ::Panther::Operation::Create
+          private
 
-    authorize_and_validate contract: contract, params: params
+          def build_resource(params)
+            ::Post.new(user: params[:current_user])
+          end
+        end
+      end
+    end
+  end
+end
 
-    contract.save
+# app/services/api/v1/post/operation/update.rb
+module API
+  module V1
+    module Post
+      module Operation
+        class Update < ::Panther::Operation::Update
+        end
+      end
+    end
+  end
+end
 
-    UserRepresenter.new(user)
+# app/services/api/v1/post/operation/destroy.rb
+module API
+  module V1
+    module Post
+      module Operation
+        class Destroy < ::Panther::Operation::Destroy
+        end
+      end
+    end
+  end
+end
+
+# app/services/api/v1/post/operation/index.rb
+module API
+  module V1
+    module Post
+      module Operation
+        class Index < ::Panther::Operation::Index
+          private
+
+          def collection(params)
+            params[:current_user].posts
+          end
+        end
+      end
+    end
+  end
+end
+
+# app/services/api/v1/post/operation/show.rb
+module API
+  module V1
+    module Post
+      module Operation
+        class Show < ::Panther::Operation::Show
+        end
+      end
+    end
   end
 end
 ```
-
-## Usage
-
-TODO: Write usage instructions
 
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at
 https://github.com/alessandro1997/panther.
-
 
 ## License
 
