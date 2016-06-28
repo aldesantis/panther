@@ -1,5 +1,8 @@
 # Panther
 
+[![Dependency Status](https://gemnasium.com/badges/github.com/alessandro1997/panther.svg)](https://gemnasium.com/github.com/alessandro1997/panther)
+[![Code Climate](https://codeclimate.com/github/alessandro1997/panther/badges/gpa.svg)](https://codeclimate.com/github/alessandro1997/panther)
+
 Panther is a lightweight, opinionated architecture for creating API-only Rails
 applications.
 
