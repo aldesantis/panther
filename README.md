@@ -6,6 +6,22 @@ applications.
 It is heavily inspired by [Trailblazer](http://trailblazer.to/) but has a
 gentler learning curve.
 
+<!-- MarkdownTOC depth=3 autolink=true bracket=round -->
+
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Directory Structure](#directory-structure)
+  - [Contracts](#contracts)
+  - [Representers](#representers)
+  - [Policies](#policies)
+  - [Operations](#operations)
+  - [Controllers](#controllers)
+  - [Routes](#routes)
+- [Contributing](#contributing)
+- [License](#license)
+
+<!-- /MarkdownTOC -->
+
 ## Installation
 
 Add this line to your application's Gemfile:
