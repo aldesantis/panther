@@ -8,8 +8,14 @@ module Panther
         authorize model: record, params: params
 
         record.destroy!
+        after_destroy record
 
         head :ok
+      end
+
+      private
+
+      def after_destroy(record)
       end
     end
   end
