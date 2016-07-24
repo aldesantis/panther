@@ -10,7 +10,7 @@ module Panther
         record.destroy!
         after_destroy record
 
-        head :ok
+        head :no_content
       end
 
       private
