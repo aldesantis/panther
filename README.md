@@ -364,3 +364,5 @@ The gem is available as open source under the terms of the
 - [ ] Handle common errors (e.g. `ActiveRecord::RecordNotFound`).
 - [ ] Provide `fail!` method for raising HTTP errors.
 - [ ] Use [Hooks](https://github.com/apotonick/hooks) for handling callbacks.
+- [ ] Send appropriate HTTP status code for validation errors.
+- [ ] Respond with `201 Created` to create operations.
