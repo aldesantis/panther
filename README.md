@@ -22,6 +22,7 @@ gentler learning curve.
   - [Routes](#routes)
 - [Contributing](#contributing)
 - [License](#license)
+- [To do](#to-do)
 
 <!-- /MarkdownTOC -->
 
@@ -357,3 +358,9 @@ https://github.com/alessandro1997/panther.
 
 The gem is available as open source under the terms of the
 [MIT License](http://opensource.org/licenses/MIT).
+
+## To do
+
+- [ ] Handle common errors (e.g. `ActiveRecord::RecordNotFound`).
+- [ ] Provide `fail!` method for raising HTTP errors.
+- [ ] Use [Hooks](https://github.com/apotonick/hooks) for handling callbacks.
