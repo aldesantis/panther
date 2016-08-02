@@ -24,6 +24,7 @@ require 'panther/policy/base'
 require 'panther/representer/base'
 require 'panther/representer/collection'
 require 'panther/representer/pagination'
+require 'panther/representer/timestamped'
 
 require 'panther/controller'
 
