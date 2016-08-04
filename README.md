@@ -366,3 +366,5 @@ The gem is available as open source under the terms of the
 - [ ] Use [Hooks](https://github.com/apotonick/hooks) for handling callbacks.
 - [ ] Send appropriate HTTP status code for validation errors.
 - [ ] Respond with `201 Created` to create operations.
+- [ ] Move appropriate status code to error classes.
+- [ ] Wrap instance method `#run` in class method `.run`.
