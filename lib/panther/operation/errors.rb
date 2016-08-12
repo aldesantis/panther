@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Panther
   module Operation
-    class OperationError
+    class OperationError < StandardError
       attr_reader :status
 
       def as_json(_options)
