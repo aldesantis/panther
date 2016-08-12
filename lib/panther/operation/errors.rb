@@ -1,7 +1,26 @@
 # frozen_string_literal: true
 module Panther
   module Operation
-    class InvalidContractError < StandardError
+    class OperationError
+      attr_reader :status
+
+      def as_json(_options)
+        metadata.merge(
+          error: status,
+          message: message
+        )
+      end
+
+      protected
+
+      def metadata
+        {}
+      end
+    end
+
+    class InvalidContractError < OperationError
+      @status = :unprocessable_entity
+
       attr_reader :errors
 
       def initialize(errors)
@@ -9,16 +28,16 @@ module Panther
         super 'The contract for this operation was not respected'
       end
 
-      def as_json(_options)
-        {
-          error: :unprocessable_entity,
-          message: message,
-          validation_errors: errors
-        }
+      protected
+
+      def metadata
+        { validation_errors: errors }
       end
     end
 
-    class PolicyError < StandardError
+    class PolicyError < OperationError
+      @status = :forbidden
+
       attr_reader :model, :user, :action
 
       def initialize(model:, user:, action:)
@@ -26,16 +45,7 @@ module Panther
         @user = user
         @action = action
 
-        super(
-          'The current user is not authorized to perform the requested action'
-        )
-      end
-
-      def as_json(_options)
-        {
-          error: :forbidden,
-          message: message
-        }
+        super 'The current user is not authorized to perform the requested action'
       end
     end
   end

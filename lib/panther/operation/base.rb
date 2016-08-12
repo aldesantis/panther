@@ -30,6 +30,10 @@ module Panther
         def policy_klass
           resource_module::Policy
         end
+
+        def run(*args)
+          new.run(*args)
+        end
       end
 
       def run(_params)

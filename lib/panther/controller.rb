@@ -48,10 +48,8 @@ module Panther
         def run(klass)
           begin
             result = klass.new.run(operation_params)
-          rescue Panther::Operation::InvalidContractError => e
-            render(json: e, status: :unprocessable_entity) and return
-          rescue Panther::Operation::PolicyError => e
-            render(json: e, status: :forbidden) and return
+          rescue Panther::Operation::OperationError => e
+            render json: e, status: e.status and return
           end
 
           result.is_a?(Symbol) ? head(result) : render(json: result)
