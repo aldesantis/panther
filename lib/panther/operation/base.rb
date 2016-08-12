@@ -2,6 +2,10 @@
 module Panther
   module Operation
     class Base
+      include Hooks
+
+      define_hooks :before_run, :after_run
+
       class << self
         def operation_name
           name.demodulize.underscore
@@ -31,8 +35,14 @@ module Panther
           resource_module::Policy
         end
 
-        def run(*args)
-          new.run(*args)
+        def run(params)
+          instance = new
+
+          instance.run_hook :before_run, params
+          result = instance.run params
+          instance.run_hook :after_run, params, result
+
+          result
         end
       end
 

@@ -47,7 +47,7 @@ module Panther
 
         def run(klass)
           begin
-            result = klass.new.run(operation_params)
+            result = klass.run(operation_params)
           rescue Panther::Operation::OperationError => e
             render json: e, status: e.status and return
           end
