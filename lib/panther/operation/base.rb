@@ -52,42 +52,24 @@ module Panther
 
       protected
 
-      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-      def authorize(model:, params:, revalidate: true)
-        if model.is_a?(Contract::Base) && revalidate
-          model.errors.clear
-          model.validate(params)
-        end
-
-        fail(
-          PolicyError,
+      def authorize(model:, params:)
+        Authorizer.authorize!(
           model: model,
-          user: params[:current_user],
-          action: self.class.operation_name
-        ) unless self.class.policy_klass.new(
-          model: model,
-          user: params[:current_user]
-        ).public_send("#{self.class.operation_name}?")
+          params: params,
+          operation: self.class
+        )
       end
-      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
-      def validate(contract:, params:, revalidate: true)
-        if revalidate
-          contract.errors.clear
-          valid = contract.validate(params)
-        else
-          valid = contract.errors.empty?
-        end
-
-        fail(
-          InvalidContractError,
-          contract.errors
-        ) unless valid
+      def validate(contract:, params:)
+        Validator.validate!(
+          model: contract,
+          params: params
+        )
       end
 
       def authorize_and_validate(contract:, params:)
         authorize model: contract, params: params
-        validate contract: contract, params: params, revalidate: false
+        validate contract: contract, params: params
       end
 
       def head(status)
