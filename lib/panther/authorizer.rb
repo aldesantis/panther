@@ -19,7 +19,7 @@ class Authorizer
       ) unless authorize(
         model: model,
         params: params,
-        operation: operation.operation_name
+        operation: operation
       )
     end
 
