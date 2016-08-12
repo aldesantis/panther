@@ -2,13 +2,15 @@
 module Panther
   module Operation
     class OperationError < StandardError
-      attr_reader :status
-
       def as_json(_options)
         metadata.merge(
           error: status,
           message: message
         )
+      end
+
+      def status
+        :internal_server_error
       end
 
       protected
@@ -19,13 +21,15 @@ module Panther
     end
 
     class InvalidContractError < OperationError
-      @status = :unprocessable_entity
-
       attr_reader :errors
 
       def initialize(errors)
         @errors = errors
         super 'The contract for this operation was not respected'
+      end
+
+      def status
+        :unprocessable_entity
       end
 
       protected
@@ -36,8 +40,6 @@ module Panther
     end
 
     class PolicyError < OperationError
-      @status = :forbidden
-
       attr_reader :model, :user, :action
 
       def initialize(model:, user:, action:)
@@ -46,6 +48,10 @@ module Panther
         @action = action
 
         super 'The current user is not authorized to perform the requested action'
+      end
+
+      def status
+        :forbidden
       end
     end
   end
