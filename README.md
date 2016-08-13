@@ -367,6 +367,6 @@ The gem is available as open source under the terms of the
 - [x] Send appropriate HTTP status code for validation errors.
 - [ ] Respond with `201 Created` to create operations.
 - [x] Move appropriate status code to error classes.
-- [ ] Wrap instance method `#run` in class method `.run`.
+- [x] Wrap instance method `#run` in class method `.run`.
 - [ ] Write documentation.
 - [ ] Write tests.
