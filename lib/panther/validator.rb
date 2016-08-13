@@ -25,14 +25,11 @@ module Panther
       end
 
       def validate_model(model, params)
-        assign_params(model, params)
-        model.validate
-      end
-
-      def assign_params(model, params)
         params.each_pair do |name, value|
-          model.send("#{name}=", value) if model.respond_to?("#{name}=")
+          model.try("#{name}=", value)
         end
+
+        model.validate
       end
     end
   end

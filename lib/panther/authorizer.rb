@@ -3,11 +3,6 @@ module Panther
   class Authorizer
     class << self
       def authorize(model:, params:, operation:)
-        # FIXME: We call Validator.validate here to assign the params to the model/contract. Not
-        # sure if the logic should be extracted or if we should avoid assigning the parameters.
-        Validator.validate(model: model, params: params)
-        model.errors.clear
-
         operation.policy_klass.new(
           model: model,
           user: params[:current_user]
@@ -25,6 +20,19 @@ module Panther
           params: params,
           operation: operation
         )
+      end
+
+      private
+
+      def assign_params(model, params)
+        case model
+        when ActiveRecord::Base
+          params.each_pair do |name, value|
+            model.try("#{name}=", value)
+          end
+        when Contract::Base
+          model.deserialize(params)
+        end
       end
     end
   end
