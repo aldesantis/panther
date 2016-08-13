@@ -8,15 +8,15 @@ module Panther
         end
       end
 
-      def run(params)
+      def call
         record = self.class.resource_model.find(params[:id])
         contract = self.class.contract_klass.new(record)
 
-        authorize_and_validate contract: contract, params: params
+        authorize_and_validate contract
 
         contract.save
 
-        self.class.representer_klass.new(contract.model)
+        respond_with resource: self.class.representer_klass.new(contract.model)
       end
     end
   end

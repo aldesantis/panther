@@ -2,78 +2,40 @@
 module Panther
   module Operation
     class Base
-      include Hooks
+      include Interactor
 
-      define_hooks :before_run, :after_run
+      include Naming
+      include Authorization
+      include Validation
 
-      class << self
-        def operation_name
-          name.demodulize.underscore
-        end
-
-        def resource_module
-          name.to_s.split('::')[0..-3].join('::').constantize
-        end
-
-        def resource_name
-          resource_module.to_s.demodulize
-        end
-
-        def resource_model
-          "::#{resource_name}".constantize
-        end
-
-        def representer_klass
-          resource_module::Representer::Resource
-        end
-
-        def collection_representer_klass
-          resource_module::Representer::Collection
-        end
-
-        def policy_klass
-          resource_module::Policy
-        end
-
-        def run(params)
-          instance = new
-
-          instance.run_hook :before_run, params
-          result = instance.run params
-          instance.run_hook :after_run, params, result
-
-          result
+      def self.inherited(klass)
+        klass.class_eval do
+          include Hooks
         end
       end
 
-      def run(_params)
+      def call
         fail NotImplementedError
       end
 
       protected
 
-      def authorize(model:, params:)
-        Authorizer.authorize!(
-          model: model,
-          params: params,
-          operation: self.class
-        )
+      def params
+        context.params
       end
 
-      def validate(contract:, params:)
-        Validator.validate!(
-          model: contract,
-          params: params
-        )
+      def authorize_and_validate(contract)
+        authorize contract
+        validate contract
       end
 
-      def authorize_and_validate(contract:, params:)
-        authorize model: contract, params: params
-        validate contract: contract, params: params
+      def respond_with(status: nil, resource: nil)
+        context.status = status
+        context.resource = resource
       end
 
       def head(status)
-        status.to_sym # Yep. Not much magic to it.
+        respond_with status: status
       end
     end
   end

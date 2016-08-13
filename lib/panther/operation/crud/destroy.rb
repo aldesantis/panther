@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 module Panther
   module Operation
-    class Show < Base
-      def run(params)
+    class Destroy < Base
+      def call
         record = self.class.resource_model.find(params[:id])
 
-        authorize model: record, params: params
+        authorize record
 
-        self.class.representer_klass.new(record)
+        record.destroy!
+
+        respond_with status: :no_content
       end
     end
   end

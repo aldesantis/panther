@@ -46,13 +46,13 @@ module Panther
         protected
 
         def run(klass)
-          begin
-            result = klass.run(operation_params)
-          rescue Panther::Operation::OperationError => e
-            render json: e, status: e.status and return
-          end
+          result = klass.call(params: operation_params)
 
-          result.is_a?(Symbol) ? head(result) : render(json: result)
+          if result.resource
+            render json: result.resource, status: result.status
+          else
+            head result.status
+          end
         end
 
         private
