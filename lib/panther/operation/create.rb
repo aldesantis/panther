@@ -15,7 +15,6 @@ module Panther
         authorize_and_validate contract: contract, params: params
 
         contract.save
-        after_create contract
 
         self.class.representer_klass.new(contract.model)
       end
@@ -24,9 +23,6 @@ module Panther
 
       def build_resource(_params)
         fail NotImplementedError
-      end
-
-      def after_create(contract)
       end
     end
   end

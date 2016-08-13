@@ -8,14 +8,8 @@ module Panther
         authorize model: record, params: params
 
         record.destroy!
-        after_destroy record
 
         head :no_content
-      end
-
-      private
-
-      def after_destroy(record)
       end
     end
   end

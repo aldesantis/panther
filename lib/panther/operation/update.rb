@@ -15,14 +15,8 @@ module Panther
         authorize_and_validate contract: contract, params: params
 
         contract.save
-        after_update contract
 
         self.class.representer_klass.new(contract.model)
-      end
-
-      private
-
-      def after_update(contract)
       end
     end
   end
