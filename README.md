@@ -363,3 +363,4 @@ The gem is available as open source under the terms of the
 
 - [ ] Write documentation.
 - [ ] Write tests.
+- [ ] Don't include `Dry::Types` directly into `Contract::Base`.
