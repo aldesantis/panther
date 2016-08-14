@@ -38,7 +38,7 @@ module Panther
         respond_with status: status
       end
 
-      def fail(error, *args)
+      def fail!(error, *args)
         klass_name = "::Panther::Operation::Errors::#{error.to_s.camelize}"
         fail "#{error} is not a defined error" unless defined?(klass_name.constantize)
         fail klass_name.constantize, *args

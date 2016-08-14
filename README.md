@@ -361,12 +361,5 @@ The gem is available as open source under the terms of the
 
 ## Future features
 
-- [ ] Handle common errors (e.g. `ActiveRecord::RecordNotFound`).
-- [x] Provide `fail!` method for raising errors.
-- [x] Use [Hooks](https://github.com/apotonick/hooks) for handling callbacks.
-- [x] Send appropriate HTTP status code for validation errors.
-- [x] Respond with `201 Created` to create operations.
-- [x] Move appropriate status code to error classes.
-- [x] Wrap instance method `#run` in class method `.run`.
 - [ ] Write documentation.
 - [ ] Write tests.
