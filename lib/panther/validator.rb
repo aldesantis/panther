@@ -11,18 +11,16 @@ module Panther
       # Validates a resource
       #
       # @param resource [Contract::Base|ActiveRecord::Base] The resource to validate
-      # @param params [Hash] The parameters to use for validation
       #
       # @return [Boolean] Whether the resource is valid
-      def validate(resource:, params:)
+      def validate(resource:)
         case resource
         when Contract::Base
-          validate_contract(resource, params)
+          validate_contract(resource)
         when ActiveRecord::Base
-          validate_model(resource, params)
+          validate_model(resource)
         end
       end
-
 
       # Validates a resource and raises an error if it's invalid
       #
@@ -31,24 +29,20 @@ module Panther
       #
       # @see .validate
       # @raise [Operation::Errors::InvalidContract] if validation fails
-      def validate!(resource:, params:)
+      def validate!(resource:)
         fail(
           Operation::Errors::InvalidContract,
           errors: resource.errors
-        ) unless validate(resource: resource, params: params)
+        ) unless validate(resource: resource)
       end
 
       private
 
-      def validate_contract(contract, params)
-        contract.validate(params)
+      def validate_contract(contract)
+        contract.validate({})
       end
 
-      def validate_model(model, params)
-        params.each_pair do |name, value|
-          model.try("#{name}=", value)
-        end
-
+      def validate_model(model)
         model.validate
       end
     end

@@ -18,7 +18,7 @@ module Panther
       def authorize(resource)
         Authorizer.authorize!(
           resource: resource,
-          params: params,
+          user: params[:current_user],
           operation: self.class
         )
       end

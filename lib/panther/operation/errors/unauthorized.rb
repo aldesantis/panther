@@ -2,10 +2,10 @@ module Panther
   module Operation
     module Errors
       class Unauthorized < Base
-        attr_reader :model, :user, :action
+        attr_reader :resource, :user, :action
 
-        def initialize(model:, user:, action:)
-          @model = model
+        def initialize(resource:, user:, action:)
+          @resource = resource
           @user = user
           @action = action
 

@@ -16,16 +16,14 @@ module Panther
       # Authorizes an operation on the given resoruce
       #
       # @param resource [Contract::Base|ActiveRecord::Base] The resource to authorize
-      # @param params [Hash] The parameters to use for authorization
       # @param operation [Operation::Base] The operation to authorize
+      # @param user [Object] The user to authorize
       #
       # @return [Boolean] Whether the operation is authorized
-      def authorize(resource:, params:, operation:)
-        write_params resource, params
-
+      def authorize(resource:, operation:, user:)
         operation.policy_klass.new(
           resource: resource,
-          user: params[:current_user]
+          user: user
         ).public_send("#{operation.operation_name}?")
       end
 
@@ -36,30 +34,17 @@ module Panther
       #
       # @see .authorize
       # @raise [Operation::Errors::Unauthorized] if the resource is invalid
-      def authorize!(resource:, params:, operation:)
+      def authorize!(resource:, operation:, user:)
         fail(
           Operation::Errors::Unauthorized,
           resource: resource,
-          user: params[:current_user],
+          user: user,
           action: operation.policy_klass
         ) unless authorize(
           resource: resource,
-          params: params,
-          operation: operation
+          operation: operation,
+          user: user
         )
-      end
-
-      private
-
-      def write_params(resource, params)
-        case resource
-        when ActiveRecord::Base
-          params.each_pair do |name, value|
-            resource.try("#{name}=", value)
-          end
-        when Contract::Base
-          resource.deserialize(params)
-        end
       end
     end
   end

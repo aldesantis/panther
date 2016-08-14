@@ -15,10 +15,7 @@ module Panther
       #
       # @see Validator.validate!
       def validate(resource)
-        Validator.validate!(
-          resource: resource,
-          params: params
-        )
+        Validator.validate! resource: resource
       end
     end
   end

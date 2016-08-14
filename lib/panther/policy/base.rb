@@ -2,11 +2,11 @@
 module Panther
   module Policy
     class Base
-      attr_reader :user, :model
+      attr_reader :user, :resource
 
-      def initialize(user:, model:)
+      def initialize(user:, resource:)
         @user = user
-        @model = model
+        @resource = resource
       end
     end
   end
