@@ -15,7 +15,7 @@ module Panther
 
       def handle_errors(interactor)
         interactor.call
-      rescue OperationError => e
+      rescue Errors::Base => e
         context.fail!(resource: e, status: e.status)
       end
     end

@@ -13,8 +13,8 @@ module Panther
 
       def validate!(model:, params:)
         fail(
-          Operation::InvalidContractError,
-          model.errors
+          Operation::Errors::InvalidContract,
+          errors: model.errors
         ) unless validate(model: model, params: params)
       end
 

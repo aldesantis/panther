@@ -11,7 +11,7 @@ module Panther
 
       def authorize!(model:, params:, operation:)
         fail(
-          Operation::PolicyError,
+          Operation::Errors::Unauthorized,
           model: model,
           user: params[:current_user],
           action: operation.policy_klass
