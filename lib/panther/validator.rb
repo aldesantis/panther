@@ -1,21 +1,41 @@
 # frozen_string_literal: true
 module Panther
+  # Validator
+  #
+  # The validator uses contracts to validate a resource.
+  #
+  # @author Alessandro Desantis <desa.alessandro@gmail.com>
+  # @see Contract::Base
   class Validator
     class << self
-      def validate(model:, params:)
-        case model
+      # Validates a resource
+      #
+      # @param resource [Contract::Base|ActiveRecord::Base] The resource to validate
+      # @param params [Hash] The parameters to use for validation
+      #
+      # @return [Boolean] Whether the resource is valid
+      def validate(resource:, params:)
+        case resource
         when Contract::Base
-          validate_contract(model, params)
+          validate_contract(resource, params)
         when ActiveRecord::Base
-          validate_model(model, params)
+          validate_model(resource, params)
         end
       end
 
-      def validate!(model:, params:)
+
+      # Validates a resource and raises an error if it's invalid
+      #
+      # Calls {#validate} on the given resource and raises a {Operation::Errors::InvalidContract}
+      # error if validation fails.
+      #
+      # @see .validate
+      # @raise [Operation::Errors::InvalidContract] if validation fails
+      def validate!(resource:, params:)
         fail(
           Operation::Errors::InvalidContract,
-          errors: model.errors
-        ) unless validate(model: model, params: params)
+          errors: resource.errors
+        ) unless validate(resource: resource, params: params)
       end
 
       private
