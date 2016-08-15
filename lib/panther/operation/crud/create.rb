@@ -9,7 +9,7 @@ module Panther
       end
 
       def call
-        record = build_resource(params)
+        record = build_resource
         contract = self.class.contract_klass.new(record)
 
         authorize_and_validate contract
@@ -21,7 +21,7 @@ module Panther
 
       private
 
-      def build_resource(_params)
+      def build_resource
         fail NotImplementedError
       end
     end
