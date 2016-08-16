@@ -50,7 +50,7 @@ module Panther
 
       # Validates a resource and raises an error if it's invalid
       #
-      # Calls {#validate} on the given resource and raises a {Operation::Errors::InvalidContract}
+      # Calls {.validate} on the given resource and raises a {Operation::Errors::InvalidContract}
       # error if validation fails.
       #
       # @see .validate
