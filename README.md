@@ -361,6 +361,8 @@ The gem is available as open source under the terms of the
 
 ## Future features
 
-- [ ] Write documentation.
+- [ ] Write API documentation.
+- [ ] Write user guides.
 - [ ] Write tests.
 - [ ] Don't include `Dry::Types` directly into `Contract::Base`.
+- [ ] Only expose existing attributes in `Representer::Timestamped`.
