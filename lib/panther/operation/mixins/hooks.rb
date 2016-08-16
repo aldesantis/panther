@@ -16,7 +16,7 @@ module Panther
 
       def convert_errors(interactor)
         interactor.call
-      rescue ActiveRecord::RecordNotFound => e
+      rescue ActiveRecord::RecordNotFound
         fail! :not_found
       end
 
