@@ -365,4 +365,4 @@ The gem is available as open source under the terms of the
 - [ ] Write user guides.
 - [ ] Write tests.
 - [ ] Don't include `Dry::Types` directly into `Contract::Base`.
-- [ ] Only expose existing attributes in `Representer::Timestamped`.
+- [x] Only expose existing attributes in `Representer::Timestamped`.

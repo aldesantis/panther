@@ -4,8 +4,8 @@ module Panther
     module Timestamped
       def self.included(klass)
         klass.class_eval <<-RUBY
-          property :created_at, exec_context: :decorator
-          property :updated_at, exec_context: :decorator
+          property :created_at, exec_context: :decorator, if: -> (_) { respond_to?(:created_at) }
+          property :updated_at, exec_context: :decorator, if: -> (_) { respond_to?(:updated_at) }
 
           def created_at
             represented.created_at.to_i
