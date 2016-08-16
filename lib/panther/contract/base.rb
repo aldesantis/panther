@@ -5,7 +5,6 @@ module Panther
   module Contract
     class Base < Reform::Form
       include Coercion
-      include Dry::Types.module
     end
   end
 end

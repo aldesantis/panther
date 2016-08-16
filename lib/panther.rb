@@ -11,6 +11,7 @@ require 'interactor'
 require 'panther/version'
 
 require 'panther/contract/base'
+require 'panther/contract/types'
 
 require 'panther/policy/base'
 
