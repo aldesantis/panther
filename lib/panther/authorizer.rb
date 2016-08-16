@@ -10,6 +10,7 @@ module Panther
   # reason, the authorizer writes the parameters to the resource before querying the policy.
   #
   # @author Alessandro Desantis <desa.alessandro@gmail.com>
+  #
   # @see Policy::Base
   class Authorizer
     class << self
@@ -20,6 +21,19 @@ module Panther
       # @param user [Object] The user to authorize
       #
       # @return [Boolean] Whether the operation is authorized
+      #
+      # @example Authorizing outside of an operation
+      #   class BanUser
+      #     def self.run(user:, current_user:)
+      #       fail 'Unauthorized' unless Panther::Authorizer.authorize(
+      #         resource: user,
+      #         operation: API::V1::User::Operation::Create,
+      #         user: current_user
+      #       )
+      #
+      #       # ...
+      #     end
+      #   end
       def authorize(resource:, operation:, user:)
         operation.policy_klass.new(
           resource: resource,
@@ -33,7 +47,21 @@ module Panther
       # {Operation::Errors::Unauthorized} error.
       #
       # @see .authorize
+      #
       # @raise [Operation::Errors::Unauthorized] if the resource is invalid
+      #
+      # @example Authorizing outside of an operation
+      #   class BanUser
+      #     def self.run(user:, current_user:)
+      #       Panther::Authorizer.authorize!(
+      #         resource: user,
+      #         operation: API::V1::User::Operation::Create,
+      #         user: current_user
+      #       )
+      #
+      #       # ...
+      #     end
+      #   end
       def authorize!(resource:, operation:, user:)
         fail(
           Operation::Errors::Unauthorized,
