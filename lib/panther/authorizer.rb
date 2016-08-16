@@ -23,11 +23,11 @@ module Panther
       # @return [Boolean] Whether the operation is authorized
       #
       # @example Authorizing outside of an operation
-      #   class BanUser
+      #   class UpdateUser
       #     def self.run(user:, current_user:)
       #       fail 'Unauthorized' unless Panther::Authorizer.authorize(
       #         resource: user,
-      #         operation: API::V1::User::Operation::Create,
+      #         operation: API::V1::User::Operation::Update,
       #         user: current_user
       #       )
       #
@@ -51,11 +51,11 @@ module Panther
       # @raise [Operation::Errors::Unauthorized] if the resource is invalid
       #
       # @example Authorizing outside of an operation
-      #   class BanUser
+      #   class UpdateUser
       #     def self.run(user:, current_user:)
       #       Panther::Authorizer.authorize!(
       #         resource: user,
-      #         operation: API::V1::User::Operation::Create,
+      #         operation: API::V1::User::Operation::Update,
       #         user: current_user
       #       )
       #

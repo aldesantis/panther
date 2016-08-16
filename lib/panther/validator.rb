@@ -22,7 +22,7 @@ module Panther
       #   class UpdateUser
       #     def self.run(user:, params:)
       #       user.assign_attributes(params)
-      #       fail 'Invalid params' unless Validator.validate(resource: user)
+      #       fail 'Invalid params' unless Panther::Validator.validate(resource: user)
       #
       #       # ...
       #     end
@@ -34,7 +34,7 @@ module Panther
       #       contract = API::V1::User::Contract::Update.new(user)
       #       contract.deserialize(params)
       #
-      #       fail 'Invalid params' unless Validator.validate(resource: user)
+      #       fail 'Invalid params' unless Panther::Validator.validate(resource: user)
       #
       #       # ...
       #     end
@@ -61,7 +61,7 @@ module Panther
       #   class UpdateUser
       #     def self.run(user:, params:)
       #       user.assign_attributes(params)
-      #       Validator.validate!(resource: user)
+      #       Panther::Validator.validate!(resource: user)
       #
       #       # ...
       #     end
