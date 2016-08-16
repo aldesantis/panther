@@ -4,7 +4,7 @@ module Panther
     # Coercion types
     #
     # This module can be used to add coercion support to a contract through the awesome
-    # {Dry::Types http://dry-rb.org/gems/dry-types} gem.
+    # {http://dry-rb.org/gems/dry-types Dry::Types} gem.
     #
     # @author Alessandro Desantis <desa.alessandro@gmail.com>
     #

@@ -8,7 +8,7 @@ module Panther
     # Contracts are used to parse and validate incoming data, usually in write (create/update)
     # operations.
     #
-    # They are just a thin layer on top of {Reform https://github.com/apotonick/reform}.
+    # They are just a thin layer on top of {https://github.com/apotonick/reform Reform}.
     #
     # @author Alessandro Desantis <desa.alessandro@gmail.com>
     #
