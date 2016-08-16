@@ -9,8 +9,8 @@ module Panther
   module Controller
     # Included hook
     #
-    # When including this module in a controller, <code>protect_from_forgery</code> is called with the
-    # <code>null_session</code> and the controller is marked as responding to JSON.
+    # When including this module in a controller, +protect_from_forgery+ is called with the
+    # +null_session+ and the controller is marked as responding to JSON.
     def self.included(klass)
       klass.class_eval do
         @actions = []
@@ -34,9 +34,8 @@ module Panther
 
       # Returns the module encapsulating the resource
       #
-      # If the controller's name is <code>API::V1::UsersController</code>, the default module name
-      # will be <code>API::V1::User</code>. Basically, the method appends {#resource_name} to the
-      # namespace.
+      # If the controller's name is +API::V1::UsersController+, the default module name will be
+      # +API::V1::User+. Basically, the method appends {#resource_name} to the namespace.
       #
       # @return [Module] The resource module
       #
@@ -47,8 +46,8 @@ module Panther
 
       # Returns the resource name
       #
-      # If the controller's name is <code>API::V1::UsersController</code>, the default resource name
-      # will be <code>User</code>.
+      # If the controller's name is +API::V1::UsersController+, the default resource name will be
+      # +User+.
       #
       # @return [String] The resource name
       def resource_name
@@ -57,8 +56,8 @@ module Panther
 
       # Returns the class handling an operation
       #
-      # If the controller's name is <code>API::V1::UsersController</code>, the default class of the
-      # <code>create</code> operation will be <code>API::V1::User::Operation::Create</code>.
+      # If the controller's name is +API::V1::UsersController+, the default class of the +create+
+      # operation will be +API::V1::User::Operation::Create+.
       #
       # @param operation [String|Symbol] Operation name
       #
@@ -99,15 +98,15 @@ module Panther
 
     # Runs a Panther operation
     #
-    # Runs the provided operation by calling {#call} on it and passing <code>operation_params</code>
-    # as the <code>params</code> parameter.
+    # Runs the provided operation by calling {#call} on it and passing +operation_params+ as the
+    # +params+ parameter.
     #
-    # By default, <code>operation_params</code> simply returns Rails' <code>params</code>, but it
-    # can be overridden to provide additional context.
+    # By default, +operation_params+ simply returns Rails' +params+, but it can be overridden to
+    # provide additional context.
     #
-    # Responds with the <code>status</code> HTTP status of the context returned by the operation. If
-    # the context returned by the operation has a <code>resource</code> attribute, then the resource
-    # is also rendered as JSON.
+    # Responds with the +status+ HTTP status of the context returned by the operation. If the
+    # context returned by the operation has a +resource+ attribute, then the resource is also
+    # rendered as JSON.
     #
     # @param klass [Panther::Operation] The operation to run
     def run(klass)
