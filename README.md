@@ -366,3 +366,4 @@ The gem is available as open source under the terms of the
 - [ ] Write tests.
 - [x] Don't include `Dry::Types` directly into `Contract::Base`.
 - [x] Only expose existing attributes in `Representer::Timestamped`.
+- [ ] Use a stable version of ROAR.
