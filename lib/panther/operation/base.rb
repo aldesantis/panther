@@ -19,7 +19,25 @@ module Panther
     # @see https://github.com/collectiveidea/interactor Interactor
     #
     # @example An example operation
+    #   module API
+    #     module V1
+    #       module User
+    #         module Operation
+    #           class Create < ::Panther::Operation::Base
+    #             def call
+    #               user = ::User.new(context.params)
     #
+    #               if user.save
+    #                 respond_with resource: user
+    #               else
+    #                 respond_with resource: user.errors, status: :unprocessable_entity
+    #               end
+    #             end
+    #           end
+    #         end
+    #       end
+    #     end
+    #   end
     class Base
       include Interactor
 
@@ -51,7 +69,7 @@ module Panther
         context.params
       end
 
-      # Writes the parameters to the given resources, then authorizes it and validates it.
+      # Writes the parameters to the given resource, then authorizes it and validates it.
       #
       # @param [ActiveRecord::Base|Contract::Base] The resource to authorize and validate
       def authorize_and_validate(resource)
