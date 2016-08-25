@@ -368,3 +368,5 @@ The gem is available as open source under the terms of the
 - [x] Only expose existing attributes in `Representer::Timestamped`.
 - [ ] Use a stable version of ROAR.
 - [ ] Provide a way for operations to inherit callbacks.
+- [ ] Provide a way to configure pagination in the `Index` operation.
+- [ ] Discover supported operations automatically in `Panther::Controller`.
