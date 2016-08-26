@@ -113,16 +113,35 @@ module Panther
       result = klass.call(params: operation_params)
 
       if result.resource
-        render json: result.resource, status: result.status
+        render(
+          json: result.resource.as_json(user_options: representer_options),
+          status: result.status
+        )
       else
         head result.status
       end
     end
 
-    private
+    protected
 
+    # Returns the params to pass to all operations.
+    #
+    # By default, this is an alias for +params+. You should add a +current_user+ key to make
+    # policies work correctly.
+    #
+    # @return [Hash]
     def operation_params
       params
+    end
+
+    # Returns the options to pass to all representers.
+    #
+    # By default, this is an empty hash. You can override it to implement features like sideloading
+    # associated records via an +include+ query parameter.
+    #
+    # @return [Hash]
+    def representer_options
+      {}
     end
   end
 end
