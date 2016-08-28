@@ -114,7 +114,7 @@ module Panther
 
       if result.resource
         render(
-          json: result.resource.as_json(user_options: representer_options),
+          json: result.resource.to_json(user_options: representer_options),
           status: result.status
         )
       else
@@ -136,12 +136,12 @@ module Panther
 
     # Returns the options to pass to all representers.
     #
-    # By default, this is an empty hash. You can override it to implement features like sideloading
-    # associated records via an +include+ query parameter.
+    # By default, the +params+ key is available and contains the request's params. You can override
+    # it to implement features like sideloading associated records via an +include+ query parameter.
     #
     # @return [Hash]
     def representer_options
-      {}
+      { params: params }
     end
   end
 end
