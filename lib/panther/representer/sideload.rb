@@ -32,8 +32,8 @@ module Panther
       private
 
       def association_representer(name) # TODO. support single associations
-        class_name = resource_model.reflect_on_association(name).class_name
-        "::#{namespace_module}::#{class_name}::Representer::Collection".constantize
+        class_name = self.class.resource_model.reflect_on_association(name).class_name
+        "::#{self.class.namespace_module}::#{class_name}::Representer::Collection".constantize
       end
 
       def association_represented(model:, name:, user_options:) # TODO. support single associations
