@@ -31,14 +31,34 @@ module Panther
 
       private
 
-      def association_representer(name) # TODO. support single associations
-        class_name = self.class.resource_model.reflect_on_association(name).class_name
-        "::#{self.class.namespace_module}::#{class_name}::Representer::Collection".constantize
+      def association_reflection(name)
+        self.class.resource_model.reflect_on_association(name)
       end
 
-      def association_represented(model:, name:, user_options:) # TODO. support single associations
+      def association_representer_module(name)
+        "::#{self.class.namespace_module}::#{association_reflection(name).class_name}::Representer"
+      end
+
+      def association_collection?(name)
+        association_reflection(name).collection?
+      end
+
+      def association_representer(name)
+        if reflection.collection?
+          "#{association_representer_module(name)}::Collection"
+        else
+          "#{association_representer_module(name)}::Resource"
+        end.constantize
+      end
+
+      def association_represented(model:, name:, user_options:)
         relation = model.send(name)
-        relation.paginate(page: user_options[:params]["#{name}_page"])
+
+        if association_collection?(name)
+          relation.paginate(page: user_options[:params]["#{name}_page"])
+        else
+          relation
+        end
       end
 
       module ClassMethods
