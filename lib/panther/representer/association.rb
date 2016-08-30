@@ -25,8 +25,10 @@ module Panther
     module Association
       def self.included(base)
         base.class_eval do
-          include Naming
           extend ClassMethods
+
+          include Naming
+          @associations = {}
         end
       end
 
@@ -36,28 +38,24 @@ module Panther
         # @param name [Symbol] The association's name
         # @param expose_id [TrueClass|FalseClass] Whether to expose the IDs of the associated
         #   records when they are not being sideloaded
-        def association(name, expose_id: false)
+        def association(name, options = {})
+          @associations[name.to_sym] = default_association_options_for(name).merge(options)
+
           define_association_property name
           define_association_getter name
 
-          if expose_id
+          if @associations[name.to_sym][:expose_id]
             define_association_id_property name
             define_association_id_getter name
           end
         end
 
-        def association_reflection(name)
-          resource_model.reflect_on_association(name)
-        end
-
-        def association_representer_module(name)
-          "::#{namespace_module}::#{association_reflection(name).class_name}::Representer"
-        end
-
-        def association_collection?(name)
-          association_reflection(name).collection?
-        end
-
+        # Returns the appropriate representer for the given association (collection or resource,
+        # depending on the association type).
+        #
+        # @param name [String|Symbol] The association's name
+        #
+        # @return [Panther::Representer::Base]
         def association_representer(name)
           if association_collection?(name)
             "#{association_representer_module(name)}::Collection"
@@ -66,17 +64,66 @@ module Panther
           end.constantize
         end
 
-        def association_represented(model:, name:, user_options:)
+        # Returns the record(s) related with the given association. If the association is a
+        # collection, paginates it.
+        #
+        # @param model [ActiveRecord::Base] The model
+        # @param name [String|Symbol] The association's name
+        # @param params [Hash] The +params+ passed to the representer
+        #
+        # @return [ActiveRecord::Relation|ActiveRecord::Base]
+        def association_represented(model:, name:, params:)
           relation = model.send(name)
 
           if association_collection?(name)
-            relation.paginate(page: user_options[:params]["#{name}_page"])
+            paginate_association(
+              relation: relation,
+              name: name,
+              params: params
+            )
           else
             relation
           end
         end
 
         private
+
+        def paginate_association(relation:, name:, params:)
+          page = params[@associations[name.to_sym][:page_param]]
+
+          per_page = if params[@associations[name.to_sym][:per_page_param]]
+            params[@associations[name.to_sym][:per_page_param]]
+          else
+            @associations[name.to_sym][:per_page]
+          end
+
+          relation.paginate(
+            page: page,
+            per_page: per_page
+          )
+        end
+
+        def association_collection?(name)
+          association_reflection(name).collection?
+        end
+
+        def default_association_options_for(name)
+          {
+            expose_id: false,
+            per_page: 10,
+            per_page_param: "#{name}_per_page",
+            page_param: "#{name}_page"
+          }
+        end
+
+        def association_reflection(name)
+          resource_model.reflect_on_association(name)
+        end
+
+        def association_representer_module(name)
+          "::#{namespace_module}::#{association_reflection(name).class_name}::Representer"
+            .constantize
+        end
 
         def define_association_property(name)
           property(
@@ -103,26 +150,28 @@ module Panther
         end
 
         def define_association_id_getter(name)
-          define_method association_id_property_name(name) do
-            method_name = if self.class.association_collection?(name)
-              "#{name.to_s.singularize}_ids"
-            else
-              "#{name}_id"
-            end
+          model_getter_name = if association_collection?(name)
+            "#{name.to_s.singularize}_ids"
+          else
+            "#{name}_id"
+          end
 
-            represented.send(method_name)
+          define_method association_id_property_name(name) do
+            represented.send(model_getter_name)
           end
         end
 
         def define_association_getter(name)
+          representer_klass = association_representer(name)
+
           define_method name do |user_options:, **|
             collection = self.class.association_represented(
               model: represented,
               name: name,
-              user_options: user_options
+              params: user_options[:params]
             )
 
-            self.class.association_representer(name).new(collection)
+            representer_klass.new(collection)
           end
         end
       end

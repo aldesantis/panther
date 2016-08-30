@@ -43,13 +43,14 @@ The gem is available as open source under the terms of the
 - [ ] Write API documentation.
 - [ ] Write user guides.
 - [ ] Write tests.
-- [x] Don't include `Dry::Types` directly into `Contract::Base`.
-- [x] Only expose existing attributes in `Representer::Timestamped`.
 - [ ] Use a stable version of ROAR.
 - [ ] Provide a way for operations to inherit callbacks.
 - [ ] Provide a way to configure pagination in the `Index` operation.
 - [ ] Discover supported operations automatically in `Panther::Controller`.
-- [ ] Support Kaminari as well as will_paginate in `Representer::Sideload`.
-- [ ] Allow providing the `per_page` option in `Representer::Sideload`.
-- [ ] Allow nesting the `include` option in `Representer::Sideload`.
-- [x] Add `expose_id` option to `Representer::Sideload`.
+- [ ] Support Kaminari as well as will_paginate in `Representer::Association`.
+- [ ] Allow nesting the `include` option in `Representer::Association`.
+- [ ] Ensure associations with the same name don't get redefined across different classes in `Representer::Association`.
+- [x] Allow providing the `per_page` option in `Representer::Association`.
+- [x] Add `expose_id` option to `Representer::Association`.
+- [x] Don't include `Dry::Types` directly into `Contract::Base`.
+- [x] Only expose existing attributes in `Representer::Timestamped`.
