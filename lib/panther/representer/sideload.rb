@@ -30,8 +30,6 @@ module Panther
         end
       end
 
-      private
-
       module ClassMethods
         # Configures sideloading for the provided association.
         #
