@@ -44,7 +44,7 @@ module Panther
       end
 
       def association_representer(name)
-        if reflection.collection?
+        if association_collection?(name)
           "#{association_representer_module(name)}::Collection"
         else
           "#{association_representer_module(name)}::Resource"
