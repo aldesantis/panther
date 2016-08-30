@@ -10,12 +10,13 @@ module Panther
     # @example An example sideloading configuration
     #   module API
     #     module V1
-    #       module User
+    #       module Post
     #         module Representer
     #           class Resource < ::Panther::Representer::Base
     #             include ::Panther::Representer::Sideload
     #
-    #             sideload_association :posts
+    #             sideload_association :author
+    #             sideload_association :post
     #           end
     #         end
     #       end

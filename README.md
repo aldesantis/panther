@@ -59,3 +59,4 @@ The gem is available as open source under the terms of the
 - [ ] Support Kaminari as well as will_paginate in `Representer::Sideload`.
 - [ ] Allow providing the `per_page` option in `Representer::Sideload`.
 - [ ] Allow nesting the `include` option in `Representer::Sideload`.
+- [ ] Add `expose_id` option to `Representer::Sideload`.
