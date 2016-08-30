@@ -1,7 +1,8 @@
 # Panther
 
-[![Dependency Status](https://gemnasium.com/badges/github.com/alessandro1997/panther.svg)](https://gemnasium.com/github.com/alessandro1997/panther)
-[![Code Climate](https://codeclimate.com/github/alessandro1997/panther/badges/gpa.svg)](https://codeclimate.com/github/alessandro1997/panther)
+[![Build Status](https://img.shields.io/travis/alessandro1997/panther.svg?maxAge=3600&style=flat-square)](https://travis-ci.org/alessandro1997/panther)
+[![Dependency Status](https://img.shields.io/gemnasium/alessandro1997/panther.svg?maxAge=3600&style=flat-square)](https://gemnasium.com/github.com/alessandro1997/panther)
+[![Code Climate](https://img.shields.io/codeclimate/github/alessandro1997/panther.svg?maxAge=3600&style=flat-square)](https://codeclimate.com/github/alessandro1997/panther)
 
 Panther is a lightweight, opinionated architecture for creating API-only Rails applications.
 
