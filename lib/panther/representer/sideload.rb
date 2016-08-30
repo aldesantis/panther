@@ -61,7 +61,7 @@ module Panther
         end
 
         def define_association_getter(name)
-          define_method do |user_options:, **|
+          define_method name do |user_options:, **|
             collection = association_represented(
               model: represented,
               name: name,
