@@ -7,8 +7,8 @@ module Panther
     # they have a context which can succeed or fail.
     #
     # Operations always expose a +status+ attribute in their output context, which is a symbol
-    # representing the HTTP status code to respond with. They may also optionally expose a +resource+ attribute,
-    # which is an object responding to +#as_json+ to be rendered.
+    # representing the HTTP status code to respond with. They may also optionally expose a
+    # +resource+ attribute, which is an object responding to +#to_json+ to be rendered.
     #
     # Operations also support before, around and after callbacks.
     #

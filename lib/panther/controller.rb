@@ -122,8 +122,6 @@ module Panther
       end
     end
 
-    protected
-
     # Returns the params to pass to all operations.
     #
     # By default, this is an alias for +params+. You should add a +current_user+ key to make
