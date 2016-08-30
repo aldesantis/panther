@@ -370,3 +370,6 @@ The gem is available as open source under the terms of the
 - [ ] Provide a way for operations to inherit callbacks.
 - [ ] Provide a way to configure pagination in the `Index` operation.
 - [ ] Discover supported operations automatically in `Panther::Controller`.
+- [ ] Support Kaminari as well as will_paginate in `Representer::Sideload`.
+- [ ] Allow providing the `per_page` option in `Representer::Sideload`.
+- [ ] Allow nesting the `include` option in `Representer::Sideload`.
