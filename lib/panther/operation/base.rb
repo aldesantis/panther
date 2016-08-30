@@ -45,9 +45,21 @@ module Panther
       include Authorization
       include Validation
 
-      def self.inherited(klass)
-        klass.class_eval do
-          include Hooks
+      class << self
+        def inherited(klass)
+          klass.class_eval do
+            include Hooks
+          end
+        end
+
+        # Returns the name of this operation.
+        #
+        # For instance, if the operation class is +API::V1::User::Operation::Create+, returns
+        # +create+.
+        #
+        # @return [String]
+        def operation_name
+          name.demodulize.underscore
         end
       end
 

@@ -10,6 +10,8 @@ require 'interactor'
 
 require 'panther/version'
 
+require 'panther/naming'
+
 require 'panther/contract/base'
 require 'panther/contract/types'
 
@@ -19,11 +21,11 @@ require 'panther/representer/base'
 require 'panther/representer/collection'
 require 'panther/representer/pagination'
 require 'panther/representer/timestamped'
+require 'panther/representer/sideload'
 
 require 'panther/authorizer'
 require 'panther/validator'
 
-require 'panther/operation/mixins/naming'
 require 'panther/operation/mixins/authorization'
 require 'panther/operation/mixins/validation'
 require 'panther/operation/mixins/hooks'
