@@ -8,15 +8,7 @@ Panther is a lightweight, opinionated architecture for creating API-only Rails a
 It is heavily inspired by [Trailblazer](http://trailblazer.to/) but is _much_ more opinionated and
 has a gentler learning curve.
 
-<!-- MarkdownTOC depth=3 autolink=true bracket=round -->
-
-- [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
-- [To-dos](#to-dos)
-
-<!-- /MarkdownTOC -->
+- [API Documentation](http://www.rubydoc.info/github/alessandro1997/panther/master)
 
 ## Installation
 
