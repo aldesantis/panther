@@ -21,7 +21,7 @@ require 'panther/representer/base'
 require 'panther/representer/collection'
 require 'panther/representer/pagination'
 require 'panther/representer/timestamped'
-require 'panther/representer/sideload'
+require 'panther/representer/association'
 
 require 'panther/authorizer'
 require 'panther/validator'

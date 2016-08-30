@@ -13,16 +13,16 @@ module Panther
     #       module Post
     #         module Representer
     #           class Resource < ::Panther::Representer::Base
-    #             include ::Panther::Representer::Sideload
+    #             include ::Panther::Representer::Association
     #
-    #             sideload_association :author
-    #             sideload_association :post
+    #             association :author
+    #             association :post
     #           end
     #         end
     #       end
     #     end
     #   end
-    module Sideload
+    module Association
       def self.included(base)
         base.class_eval do
           include Naming
@@ -36,7 +36,7 @@ module Panther
         # @param name [Symbol] The association's name
         # @param expose_id [TrueClass|FalseClass] Whether to expose the IDs of the associated
         #   records when they are not being sideloaded
-        def sideload_association(name, expose_id: false)
+        def association(name, expose_id: false)
           define_association_property name
           define_association_getter name
 
