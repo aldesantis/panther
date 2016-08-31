@@ -36,8 +36,14 @@ module Panther
         # Configures sideloading for the provided association.
         #
         # @param name [Symbol] The association's name
-        # @param expose_id [TrueClass|FalseClass] Whether to expose the IDs of the associated
-        #   records when they are not being sideloaded
+        # @param options [Hash] The options hash
+        #
+        # @option options [TrueClass|FalseClass] :expose_id Whether to expose the IDs of the
+        #   associated records when they are not being sideloaded
+        # @option options [Symbol] :page_param The name of the parameter containing the current page
+        # @option options [Fixnum] :per_page The default number of records to show per page
+        # @option options [Symbol|NilClass] :per_page_param The name of the parameter containing the
+        #   number of records to show per page, or +nil+ to disable the feature
         def association(name, options = {})
           @associations[name.to_sym] = default_association_options_for(name).merge(options)
 
@@ -55,7 +61,7 @@ module Panther
         #
         # @param name [String|Symbol] The association's name
         #
-        # @return [Panther::Representer::Base]
+        # @return [Base]
         def association_representer(name)
           if association_collection?(name)
             "#{association_representer_module(name)}::Collection"
