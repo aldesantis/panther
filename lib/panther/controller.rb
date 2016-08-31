@@ -13,8 +13,6 @@ module Panther
     # +null_session+ and the controller is marked as responding to JSON.
     def self.included(klass)
       klass.class_eval do
-        @actions = []
-
         protect_from_forgery with: :null_session
         respond_to :json
       end
@@ -23,13 +21,13 @@ module Panther
     end
 
     module ClassMethods
-      # Returns whether this controller supports an action
+      # Returns whether this controller supports an operation
       #
-      # @param action [String|Symbol] The action to check
+      # @param operation [String|Symbol] The operation to check
       #
-      # @return [Boolean] Whether the action is supported
-      def supports?(action)
-        @actions.include?(action.to_sym)
+      # @return [Boolean] Whether the operation is supported
+      def supports?(operation)
+        defined?(operation_klass(operation))
       end
 
       # Returns the module encapsulating the resource
@@ -54,50 +52,30 @@ module Panther
         name.to_s.chomp('Controller').demodulize.singularize
       end
 
-      # Returns the class handling an operation
+      # Returns the class handling an operation.
       #
       # If the controller's name is +API::V1::UsersController+, the default class of the +create+
       # operation will be +API::V1::User::Operation::Create+.
       #
       # @param operation [String|Symbol] Operation name
       #
-      # @return [Operation::Base] The operation
+      # @return [String] The operation class
       #
       # @see #resource_module
       def operation_klass(operation)
-        (resource_module.to_s << "::Operation::#{operation.to_s.camelcase}").constantize
-      end
-
-      protected
-
-      # Sets the actions supported by the controller
-      #
-      # This method should be used at the class level to specify which actions the controller (thus,
-      # the resource) supports.
-      #
-      # @example Specify the provided actions
-      #   class API::V1::UsersController < ApplicationController
-      #     include Panther::Controller
-      #     actions :index, :show, :create
-      #   end
-      #
-      # @return [Array] The supported actions
-      def actions(*new_actions)
-        @actions = new_actions.map(&:to_sym)
+        "#{resource_module.to_s}::Operation::#{operation.to_s.camelcase}"
       end
     end
 
-    %i(index show create update destroy).each do |action|
-      define_method action do
-        fail NotImplementedError unless self.class.supports?(action)
-        run self.class.operation_klass(action)
+    %i(index show create update destroy).each do |operation|
+      define_method operation do
+        ensure_operation_exists operation
+        run self.class.operation_klass(operation)
       end
     end
 
     protected
 
-    # Runs a Panther operation
-    #
     # Runs the provided operation by calling {#call} on it and passing +operation_params+ as the
     # +params+ parameter.
     #
@@ -108,9 +86,9 @@ module Panther
     # context returned by the operation has a +resource+ attribute, then the resource is also
     # rendered as JSON.
     #
-    # @param klass [Panther::Operation] The operation to run
+    # @param klass [String|Operation::Base] The operation to run
     def run(klass)
-      result = klass.call(params: operation_params)
+      result = klass.to_s.constantize.call(params: operation_params)
 
       if result.resource
         render(
@@ -140,6 +118,18 @@ module Panther
     # @return [Hash]
     def representer_options
       { params: params }
+    end
+
+    private
+
+    def ensure_operation_exists(operation)
+      return if self.class.supports?(operation)
+
+      message = <<~ERROR.gsub("\n", ' ').strip
+        Expected #{operation} to be handled by #{operation_klass.to_s}, but the class is undefined
+      ERROR
+
+      fail NotImplementedError, message
     end
   end
 end
