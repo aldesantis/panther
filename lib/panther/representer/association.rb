@@ -103,10 +103,16 @@ module Panther
             @associations[name.to_sym][:per_page]
           end
 
-          relation.paginate(
-            page: page,
-            per_page: per_page
-          )
+          if relation.respond_to?(:paginate)
+            relation.paginate(
+              page: page,
+              per_page: per_page
+            )
+          elsif relation.respond_to?(:page)
+            relation.page(page).per(per_page)
+          else
+            raise 'Could not find a supported pagination library'
+          end
         end
 
         def association_collection?(name)

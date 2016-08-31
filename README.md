@@ -47,9 +47,9 @@ The gem is available as open source under the terms of the
 - [ ] Provide a way for operations to inherit callbacks.
 - [ ] Provide a way to configure pagination in the `Index` operation.
 - [ ] Discover supported operations automatically in `Panther::Controller`.
-- [ ] Support Kaminari as well as will_paginate in `Representer::Association`.
 - [ ] Allow nesting the `include` option in `Representer::Association`.
 - [ ] Ensure associations with the same name don't get redefined across different classes in `Representer::Association`.
+- [x] Support Kaminari as well as will_paginate in `Representer::Association`.
 - [x] Allow providing the `per_page` option in `Representer::Association`.
 - [x] Add `expose_id` option to `Representer::Association`.
 - [x] Don't include `Dry::Types` directly into `Contract::Base`.
