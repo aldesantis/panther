@@ -121,7 +121,7 @@ module Panther
 
         def default_association_options_for(name)
           {
-            expose_id: false,
+            expose_id: true,
             per_page: 10,
             per_page_param: "#{name}_per_page",
             page_param: "#{name}_page"

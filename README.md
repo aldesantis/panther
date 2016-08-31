@@ -54,6 +54,8 @@ The gem is available as open source under the terms of the
 - [ ] Provide a way to configure pagination in the `Index` operation.
 - [ ] Allow nesting the `include` option in `Representer::Association`.
 - [ ] Ensure associations with the same name don't get redefined across different classes in `Representer::Association`.
+- [ ] Add `render_nil` option to `Representer::Association`.
+- [x] Make `expose_id: true` the default in `Representer::Association`.
 - [x] Discover supported operations automatically in `Panther::Controller`.
 - [x] Support Kaminari as well as will_paginate in `Representer::Association`.
 - [x] Allow providing the `per_page` option in `Representer::Association`.
