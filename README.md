@@ -15,15 +15,21 @@ has a gentler learning curve.
 
 Add this line to your application's Gemfile:
 
-```ruby gem 'panther' ```
+```ruby
+gem 'panther'
+```
 
 And then execute:
 
-    $ bundle
+```console
+$ bundle
+```
 
 Or install it yourself as:
 
-    $ gem install panther
+```console
+$ gem install panther
+```
 
 ## Usage
 
