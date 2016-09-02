@@ -117,7 +117,7 @@ module Panther
     #
     # @return [Hash]
     def representer_options
-      { params: params, include: params[:include] }
+      { params: params, include: params[:include].to_s.split(',') }
     end
 
     private
