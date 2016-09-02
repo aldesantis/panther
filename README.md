@@ -55,6 +55,7 @@ The gem is available as open source under the terms of the
 - [ ] Allow nesting the `include` option in `Representer::Association`.
 - [ ] Ensure associations with the same name don't get redefined across different classes in `Representer::Association`.
 - [ ] Add `render_nil` option to `Representer::Association`.
+- [ ] Extract `Naming` into a class.
 - [x] Make `expose_id: true` the default in `Representer::Association`.
 - [x] Discover supported operations automatically in `Panther::Controller`.
 - [x] Support Kaminari as well as will_paginate in `Representer::Association`.

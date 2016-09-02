@@ -27,8 +27,19 @@ module Panther
         base.class_eval do
           extend ClassMethods
 
-          include Naming
           @associations = {}
+        end
+      end
+
+      private
+
+      def association_represented(model:, name:, params:)
+        relation = model.send(name)
+
+        if @associations[name].collection?
+          Paginator.paginate(association: @associations[name], relation: relation, params: params)
+        else
+          relation
         end
       end
 
@@ -45,7 +56,9 @@ module Panther
         # @option options [Symbol|NilClass] :per_page_param The name of the parameter containing the
         #   number of records to show per page, or +nil+ to disable the feature
         def association(name, options = {})
-          @associations[name.to_sym] = default_association_options_for(name).merge(options)
+          @associations[name.to_sym] = Reflection.new(name, options.merge(
+            decorator_klass: self
+          ))
 
           define_association_property name
           define_association_getter name
@@ -56,86 +69,7 @@ module Panther
           end
         end
 
-        # Returns the appropriate representer for the given association (collection or resource,
-        # depending on the association type).
-        #
-        # @param name [String|Symbol] The association's name
-        #
-        # @return [Base]
-        def association_representer(name)
-          if association_collection?(name)
-            "#{association_representer_module(name)}::Collection"
-          else
-            "#{association_representer_module(name)}::Resource"
-          end.constantize
-        end
-
-        # Returns the record(s) related with the given association. If the association is a
-        # collection, paginates it.
-        #
-        # @param model [ActiveRecord::Base] The model
-        # @param name [String|Symbol] The association's name
-        # @param params [Hash] The +params+ passed to the representer
-        #
-        # @return [ActiveRecord::Relation|ActiveRecord::Base]
-        def association_represented(model:, name:, params:)
-          relation = model.send(name)
-
-          if association_collection?(name)
-            paginate_association(
-              relation: relation,
-              name: name,
-              params: params
-            )
-          else
-            relation
-          end
-        end
-
         private
-
-        def paginate_association(relation:, name:, params:)
-          page = params[@associations[name.to_sym][:page_param]]
-
-          per_page = if params[@associations[name.to_sym][:per_page_param]]
-            params[@associations[name.to_sym][:per_page_param]]
-          else
-            @associations[name.to_sym][:per_page]
-          end
-
-          if relation.respond_to?(:paginate)
-            relation.paginate(
-              page: page,
-              per_page: per_page
-            )
-          elsif relation.respond_to?(:page)
-            relation.page(page).per(per_page)
-          else
-            raise 'Could not find a supported pagination library'
-          end
-        end
-
-        def association_collection?(name)
-          association_reflection(name).collection?
-        end
-
-        def default_association_options_for(name)
-          {
-            expose_id: true,
-            per_page: 10,
-            per_page_param: "#{name}_per_page",
-            page_param: "#{name}_page"
-          }
-        end
-
-        def association_reflection(name)
-          resource_model.reflect_on_association(name)
-        end
-
-        def association_representer_module(name)
-          "::#{namespace_module}::#{association_reflection(name).class_name}::Representer"
-            .constantize
-        end
 
         def define_association_property(name)
           property(
@@ -145,17 +79,15 @@ module Panther
           )
         end
 
-        def association_id_property_name(name)
-          if association_collection?(name)
+        def define_association_id_property(name)
+          property_name = if association_collection?(name)
             "#{name}_ids"
           else
             "#{name}_id"
           end
-        end
 
-        def define_association_id_property(name)
           property(
-            association_id_property_name(name),
+            property_name,
             if: -> (user_options:, **) { !user_options[:include].include?(name.to_s) },
             exec_context: :decorator
           )
@@ -177,7 +109,7 @@ module Panther
           representer_klass = association_representer(name)
 
           define_method name do |user_options:, **|
-            value = self.class.association_represented(
+            value = association_represented(
               model: represented,
               name: name,
               params: user_options[:params]
@@ -185,7 +117,7 @@ module Panther
 
             return nil if value.nil?
 
-            representer_klass.new(value)
+            @associations[name.to_sym].representer_klass.new(value)
           end
         end
       end
