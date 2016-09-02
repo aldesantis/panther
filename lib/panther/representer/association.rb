@@ -177,13 +177,15 @@ module Panther
           representer_klass = association_representer(name)
 
           define_method name do |user_options:, **|
-            collection = self.class.association_represented(
+            value = self.class.association_represented(
               model: represented,
               name: name,
               params: user_options[:params]
             )
 
-            representer_klass.new(collection)
+            return nil if value.nil?
+
+            representer_klass.new(value)
           end
         end
       end
