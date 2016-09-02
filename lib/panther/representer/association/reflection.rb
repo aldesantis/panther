@@ -14,7 +14,7 @@ module Panther
         def representer_klass
           representer_module = "::#{@namer.namespace_module}::#{reflection.class_name}::Representer"
 
-          if collection?(name)
+          if collection?
             "#{representer_module}::Collection"
           else
             "#{representer_module}::Resource"
