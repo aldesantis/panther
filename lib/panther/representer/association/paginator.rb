@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Panther
   module Representer
     module Association
@@ -44,7 +45,7 @@ module Panther
           elsif defined?(Kaminari)
             :kaminari
           else
-            raise 'Could not find a supported pagination library'
+            fail 'Could not find a supported pagination library'
           end
         end
       end

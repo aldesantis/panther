@@ -25,6 +25,7 @@ require 'panther/representer/timestamped'
 require 'panther/representer/association'
 require 'panther/representer/association/reflection'
 require 'panther/representer/association/paginator'
+require 'panther/representer/association/binding'
 
 require 'panther/authorizer'
 require 'panther/validator'

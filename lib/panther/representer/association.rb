@@ -31,18 +31,6 @@ module Panther
         end
       end
 
-      private
-
-      def association_represented(model:, name:, params:)
-        relation = model.send(name)
-
-        if @associations[name].collection?
-          Paginator.paginate(association: @associations[name], relation: relation, params: params)
-        else
-          relation
-        end
-      end
-
       module ClassMethods
         # Configures sideloading for the provided association.
         #
@@ -94,30 +82,30 @@ module Panther
         end
 
         def define_association_id_getter(name)
-          if @associations[name].collection?
-            model_getter_name = "#{name.to_s.singularize}_ids"
-            property_name = "#{name}_ids"
+          property_name = if @associations[name].collection?
+            "#{name}_ids"
           else
-            model_getter_name = "#{name}_id"
-            property_name = "#{name}_id"
+            "#{name}_id"
           end
 
-          define_method property_name do
-            represented.send(model_getter_name)
+          association = @associations[name]
+
+          define_method property_name do |user_options:, **|
+            Binding.new(
+              association: association,
+              model: represented
+            ).represent_ids(user_options[:params])
           end
         end
 
         def define_association_getter(name)
+          association = @associations[name]
+
           define_method name do |user_options:, **|
-            value = association_represented(
-              model: represented,
-              name: name,
-              params: user_options[:params]
-            )
-
-            return nil if value.nil?
-
-            @associations[name.to_sym].representer_klass.new(value)
+            Binding.new(
+              association: association,
+              model: represented
+            ).represent(user_options[:params])
           end
         end
       end

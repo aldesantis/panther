@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Panther
   module Representer
     module Association
@@ -24,9 +25,7 @@ module Panther
           reflection.class_name.constantize
         end
 
-        def collection?
-          reflection.collection?
-        end
+        delegate :collection?, to: :reflection
 
         def single?
           !reflection.collection?

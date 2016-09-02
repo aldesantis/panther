@@ -63,7 +63,7 @@ module Panther
       #
       # @see #resource_module
       def operation_klass(operation)
-        "#{resource_module.to_s}::Operation::#{operation.to_s.camelcase}"
+        "#{resource_module}::Operation::#{operation.to_s.camelcase}"
       end
     end
 
@@ -125,8 +125,8 @@ module Panther
     def ensure_operation_exists(operation)
       return if self.class.supports?(operation)
 
-      message = <<~ERROR.gsub("\n", ' ').strip
-        Expected #{operation} to be handled by #{operation_klass.to_s}, but the class is undefined
+      message = <<~ERROR.tr("\n", ' ').strip
+        Expected #{operation} to be handled by #{operation_klass}, but the class is undefined
       ERROR
 
       fail NotImplementedError, message
