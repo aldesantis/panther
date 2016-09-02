@@ -10,11 +10,18 @@ module Panther
     def self.included(klass)
       klass.class_eval do
         @namer = Namer.new(self)
+        klass.extend ClassMethods
+      end
+    end
 
-        delegate(*[
-          :namespace_module, :resource_module, :resource_name, :resource_model, :representer_klass,
-          :collection_representer_klass, :policy_klass
-        ], to: :@namer)
+    module ClassMethods
+      [
+        :namespace_module, :resource_module, :resource_name, :resource_model, :representer_klass,
+        :collection_representer_klass, :policy_klass
+      ].each do |name|
+        define_method name do
+          @namer.send(name)
+        end
       end
     end
   end
