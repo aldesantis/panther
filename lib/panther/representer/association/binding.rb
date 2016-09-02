@@ -33,7 +33,7 @@ module Panther
           value = model.send(association.name)
 
           if association.collection?
-            Paginator.paginate(association: association, relation: value, params: params)
+            Paginator.new(association).paginate(relation: value, params: params)
           else
             value
           end
