@@ -14,7 +14,7 @@ module Panther
         def representer_klass
           representer_module = "::#{@namer.namespace_module}::#{reflection.class_name}::Representer"
 
-          if association_collection?(name)
+          if collection?(name)
             "#{representer_module}::Collection"
           else
             "#{representer_module}::Resource"
@@ -28,7 +28,7 @@ module Panther
         delegate :collection?, to: :reflection
 
         def single?
-          !reflection.collection?
+          !collection?
         end
 
         private
