@@ -63,7 +63,7 @@ module Panther
           define_association_property name
           define_association_getter name
 
-          if @associations[name.to_sym][:expose_id]
+          if @associations[name.to_sym].options[:expose_id]
             define_association_id_property name
             define_association_id_getter name
           end
@@ -80,7 +80,7 @@ module Panther
         end
 
         def define_association_id_property(name)
-          property_name = if association_collection?(name)
+          property_name = if @associations[name].collection?
             "#{name}_ids"
           else
             "#{name}_id"
@@ -94,20 +94,20 @@ module Panther
         end
 
         def define_association_id_getter(name)
-          model_getter_name = if association_collection?(name)
-            "#{name.to_s.singularize}_ids"
+          if @associations[name].collection?
+            model_getter_name = "#{name.to_s.singularize}_ids"
+            property_name = "#{name}_ids"
           else
-            "#{name}_id"
+            model_getter_name = "#{name}_id"
+            property_name = "#{name}_id"
           end
 
-          define_method association_id_property_name(name) do
+          define_method property_name do
             represented.send(model_getter_name)
           end
         end
 
         def define_association_getter(name)
-          representer_klass = association_representer(name)
-
           define_method name do |user_options:, **|
             value = association_represented(
               model: represented,

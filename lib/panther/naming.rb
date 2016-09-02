@@ -10,8 +10,9 @@ module Panther
     def self.included(klass)
       klass.class_eval do
         @namer = Namer.new(self)
-        klass.extend ClassMethods
       end
+
+      klass.extend ClassMethods
     end
 
     module ClassMethods
@@ -20,7 +21,7 @@ module Panther
         :collection_representer_klass, :policy_klass
       ].each do |name|
         define_method name do
-          @namer.send(name)
+          Namer.new(self).send(name)
         end
       end
     end

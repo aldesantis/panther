@@ -11,7 +11,7 @@ module Panther
         end
 
         def representer_klass
-          representer_module = "::#{namer.namespace_module}::#{reflection.class_name}::Representer"
+          representer_module = "::#{@namer.namespace_module}::#{reflection.class_name}::Representer"
 
           if association_collection?(name)
             "#{representer_module}::Collection"
@@ -44,7 +44,7 @@ module Panther
         end
 
         def reflection
-          namer.resource_model.reflect_on_association(name)
+          @namer.resource_model.reflect_on_association(name)
         end
       end
     end
