@@ -25,10 +25,10 @@ module Panther
         end
 
         def extract_pagination_options_from(params)
-          page = params[association.name][:page_param]
+          page = params[association.options[:page_param]]
 
-          per_page = if params[association.name][:per_page_param]
-            params[association.name][:per_page_param]
+          per_page = if params[association.options[:per_page_param]]
+            params[association.options[:per_page_param]]
           else
             association.name[:per_page]
           end
