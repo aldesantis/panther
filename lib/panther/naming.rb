@@ -8,12 +8,14 @@ module Panther
   # @author Alessandro Desantis <desa.alessandro@gmail.com>
   module Naming
     def self.included(klass)
-      @namer = Namer.new(self)
+      klass.class_eval do
+        @namer = Namer.new(self)
 
-      delegate(*[
-        :namespace_module, :resource_module, :resource_name, :resource_model, :representer_klass,
-        :collection_representer_klass, :policy_klass
-      ], to: :@namer)
+        delegate(*[
+          :namespace_module, :resource_module, :resource_name, :resource_model, :representer_klass,
+          :collection_representer_klass, :policy_klass
+        ], to: :@namer)
+      end
     end
   end
 end
