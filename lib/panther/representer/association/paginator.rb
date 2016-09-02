@@ -30,7 +30,7 @@ module Panther
           per_page = if params[association.options[:per_page_param]]
             params[association.options[:per_page_param]]
           else
-            association.name[:per_page]
+            association.options[:per_page]
           end
 
           {
