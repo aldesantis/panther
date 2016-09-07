@@ -56,11 +56,4 @@ The gem is available as open source under the terms of the
 - [ ] Ensure associations with the same name don't get redefined across different classes in `Representer::Association`.
 - [ ] Add `render_nil` option to `Representer::Association`.
 - [ ] Fix new `Namer` always instantied in `Naming`.
-- [x] Extract `Naming` into a class.
-- [x] Make `expose_id: true` the default in `Representer::Association`.
-- [x] Discover supported operations automatically in `Panther::Controller`.
-- [x] Support Kaminari as well as will_paginate in `Representer::Association`.
-- [x] Allow providing the `per_page` option in `Representer::Association`.
-- [x] Add `expose_id` option to `Representer::Association`.
-- [x] Don't include `Dry::Types` directly into `Contract::Base`.
-- [x] Only expose existing attributes in `Representer::Timestamped`.
+- [ ] Pass `Controller#representer_options` to representers instantiated by `Representer::Association::Binding`.
