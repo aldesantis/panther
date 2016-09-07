@@ -20,14 +20,42 @@ module Panther
     #       end
     #     end
     #   end
+    #
+    # @example A show operation with custom find logic
+    #   module API
+    #     module V1
+    #       module Post
+    #         module Operation
+    #           class Show < ::Panther::Operation::Show
+    #             protected
+    #
+    #             def find_resource
+    #               ::Post.find_by!(slug: params[:id])
+    #             end
+    #           end
+    #         end
+    #       end
+    #     end
+    #   end
     class Show < Base
-      # Finds the record by the +id+ parameter, authorizes it and exposes it.
+      # Finds the record with {#find_resource}, authorizes it and exposes it.
+      #
+      # @see #find_resource
       def call
-        record = self.class.resource_model.find(params[:id])
+        record = find_resource
 
         authorize record
 
         respond_with resource: self.class.representer_klass.new(record)
+      end
+
+      protected
+
+      # Finds the resource. By default, uses the +id+ parameter.
+      #
+      # @return [ActiveRecord::Base]
+      def find_resource
+        self.class.resource_model.find(params[:id])
       end
     end
   end
