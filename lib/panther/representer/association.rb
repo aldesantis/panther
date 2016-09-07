@@ -93,7 +93,8 @@ module Panther
           define_method property_name do |user_options:, **|
             Binding.new(
               association: association,
-              model: represented
+              model: represented,
+              includes: user_options[:include]
             ).represent_ids(user_options[:params])
           end
         end
@@ -104,7 +105,8 @@ module Panther
           define_method name do |user_options:, **|
             Binding.new(
               association: association,
-              model: represented
+              model: represented,
+              includes: user_options[:include]
             ).represent(user_options[:params])
           end
         end
