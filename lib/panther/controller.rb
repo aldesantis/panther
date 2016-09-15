@@ -102,22 +102,32 @@ module Panther
 
     # Returns the params to pass to all operations.
     #
-    # By default, this is an alias for +params+. You should add a +current_user+ key to make
-    # policies work correctly.
+    # By default, this includes +params+ and +current_user+.
     #
     # @return [Hash]
     def operation_params
-      params
+      params.merge(current_user: panther_user)
     end
 
-    # Returns the options to pass to all representers.
-    #
-    # By default, the +params+ key is available and contains the request's params. You can override
-    # it to implement features like sideloading associated records via an +include+ query parameter.
+    # Returns the options to pass to all representers. By default, contains +params+, +include+ and
+    # +current_user+.
     #
     # @return [Hash]
+    #
+    # @see #panther_user
     def representer_options
-      { params: params, include: params[:include].to_s.split(',') }
+      {
+        params: params,
+        include: params[:include].to_s.split(','),
+        current_user: panther_user
+      }
+    end
+
+    # Returns the current user. Should be overridden to return the user to use for all policies.
+    #
+    # @raise NotImplementedError
+    def panther_user
+      fail NotImplementedError
     end
 
     private
