@@ -72,6 +72,18 @@ module Panther
           )
         end
 
+        def define_association_getter(name)
+          association = @associations[name]
+
+          define_method name do |user_options:, **|
+            Binding.new(
+              association: association,
+              model: represented,
+              user_options: user_options
+            ).represent
+          end
+        end
+
         def define_association_id_property(name)
           association = @associations[name]
 
@@ -106,18 +118,6 @@ module Panther
               model: represented,
               user_options: user_options
             ).represent_ids
-          end
-        end
-
-        def define_association_getter(name)
-          association = @associations[name]
-
-          define_method name do |user_options:, **|
-            Binding.new(
-              association: association,
-              model: represented,
-              user_options: user_options
-            ).represent
           end
         end
       end
