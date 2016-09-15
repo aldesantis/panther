@@ -57,3 +57,5 @@ The gem is available as open source under the terms of the
 - [ ] Add `render_nil` option to `Representer::Association`.
 - [ ] Fix new `Namer` always instantied in `Naming`.
 - [ ] Pass `Controller#representer_options` to representers instantiated by `Representer::Association::Binding`.
+- [ ] Don't reqiure associations to be real associations (define singular/collection type manually).
+- [ ] Turn all todos into GitHub issues.
