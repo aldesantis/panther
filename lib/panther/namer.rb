@@ -1,8 +1,15 @@
 # frozen_string_literal: true
 module Panther
+  # The namer calculates useful class/module names from a resource class.
+  #
+  # @author Alessandro Desantis <desa.alessandro@gmail.com>
   class Namer
     attr_reader :klass
 
+    # Initializes the namer. Expects a class name like +Namespace::Resource::Module::Class+
+    # (e.g. +API::V1::User::Operation::Create+) to work properly.
+    #
+    # @param [Class] the base class name
     def initialize(klass)
       @klass = klass
     end

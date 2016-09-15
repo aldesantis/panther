@@ -8,8 +8,12 @@ module Panther
   # @author Alessandro Desantis <desa.alessandro@gmail.com>
   module Naming
     def self.included(klass)
-      klass.class_eval do
-        @namer = Namer.new(self)
+      klass.instance_eval do
+        private
+
+        def namer
+          @namer ||= Namer.new(self)
+        end
       end
 
       klass.extend ClassMethods
@@ -21,7 +25,7 @@ module Panther
         :collection_representer_klass, :policy_klass
       ].each do |name|
         define_method name do
-          Namer.new(self).send(name)
+          namer.send(name)
         end
       end
     end
