@@ -43,19 +43,3 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/alessa
 
 The gem is available as open source under the terms of the
 [MIT License](http://opensource.org/licenses/MIT).
-
-## To-dos
-
-- [ ] Write API documentation.
-- [ ] Write user guides.
-- [ ] Write tests.
-- [ ] Use a stable version of ROAR.
-- [ ] Provide a way for operations to inherit callbacks.
-- [ ] Provide a way to configure pagination in the `Index` operation.
-- [ ] Allow nesting the `include` option in `Representer::Association`.
-- [ ] Ensure associations with the same name don't get redefined across different classes in `Representer::Association`.
-- [ ] Add `render_nil` option to `Representer::Association`.
-- [x] Fix new `Namer` always instantied in `Naming`.
-- [ ] Pass `Controller#representer_options` to representers instantiated by `Representer::Association::Binding`.
-- [ ] Don't reqiure associations to be real associations (define singular/collection type manually).
-- [ ] Turn all todos into GitHub issues.
