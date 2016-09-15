@@ -31,6 +31,13 @@ module Panther
           !collection?
         end
 
+        def evaluate_conditions(context:, **args)
+          return false if options[:if] && !context.instance_exec(args, &options[:if])
+          return false if options[:unless] && context.instance_exec(args, &options[:unless])
+
+          true
+        end
+
         private
 
         def default_options

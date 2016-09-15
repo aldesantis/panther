@@ -2,25 +2,43 @@
 module Panther
   module Representer
     module Association
+      # Binds an association definition to a specific record/user_options pair and returns the
+      # actual values to expose to API consumers.
+      #
+      # @author Alessandro Desantis <desa.alessandro@gmail.com>
       class Binding
-        attr_reader :association, :model, :includes
+        attr_reader :association, :model, :user_options
 
-        def initialize(association:, model:, includes:)
+        # Initializes the binding.
+        #
+        # @param association [Reflection] the reflection
+        # @param model [ActiveRecord::Base] the record to represent
+        # @param user_options [Hash] the user_options passed to the representer
+        def initialize(association:, model:, user_options:)
           @association = association
           @model = model
-          @includes = includes
+          @user_options = user_options
         end
 
-        def represent(params)
-          value = value_for_representing(params)
+        # Returns the data to represent (a single record or a collection, depending on the
+        # association type).
+        #
+        # If the association is a collection, paginates it with the params hash.
+        #
+        # @return [Representer::Base]
+        def represent
+          value = value_for_representing
           return nil unless value
 
-          association.representer_klass.new(value).to_hash(user_options: {
+          association.representer_klass.new(value).to_hash(user_options: user_options.merge(
             include: unnested_includes
-          })
+          ))
         end
 
-        def represent_ids(_params)
+        # Returns the ID(s) related to the association.
+        #
+        # @return [Fixnum|Array<Fixnum>]
+        def represent_ids
           getter_name = if association.collection?
             "#{association.name.to_s.singularize}_ids"
           else
@@ -32,15 +50,19 @@ module Panther
 
         private
 
+        def params
+          user_options[:params]
+        end
+
         def unnested_includes
-          includes.select do |include_name|
+          user_options[:include].select do |include_name|
             include_name.start_with?("#{association.name}__")
           end.map do |include_name|
             include_name.sub("#{association.name}__", '')
           end
         end
 
-        def value_for_representing(params)
+        def value_for_representing
           value = model.send(association.name)
 
           if association.collection?

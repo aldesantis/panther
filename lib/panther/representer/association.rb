@@ -60,15 +60,22 @@ module Panther
         private
 
         def define_association_property(name)
+          association = @associations[name]
+
           property(
             name,
-            if: -> (user_options:, **) { user_options[:include].include?(name.to_s) },
+            if: proc { |user_options:, **args|
+              user_options[:include].include?(name.to_s) &&
+              association.evaluate_conditions(args.merge(context: self, user_options: user_options))
+            },
             exec_context: :decorator
           )
         end
 
         def define_association_id_property(name)
-          property_name = if @associations[name].collection?
+          association = @associations[name]
+
+          property_name = if association.collection?
             "#{name}_ids"
           else
             "#{name}_id"
@@ -76,7 +83,10 @@ module Panther
 
           property(
             property_name,
-            if: -> (user_options:, **) { !user_options[:include].include?(name.to_s) },
+            if: proc { |user_options:, **args|
+              !user_options[:include].include?(name.to_s) &&
+              association.evaluate_conditions(args.merge(context: self, user_options: user_options))
+            },
             exec_context: :decorator
           )
         end
@@ -94,8 +104,8 @@ module Panther
             Binding.new(
               association: association,
               model: represented,
-              includes: user_options[:include]
-            ).represent_ids(user_options[:params])
+              user_options: user_options
+            ).represent_ids
           end
         end
 
@@ -106,8 +116,8 @@ module Panther
             Binding.new(
               association: association,
               model: represented,
-              includes: user_options[:include]
-            ).represent(user_options[:params])
+              user_options: user_options
+            ).represent
           end
         end
       end
