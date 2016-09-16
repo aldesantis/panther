@@ -56,13 +56,6 @@ module Panther
           end.constantize
         end
 
-        # Returns the model related to this association.
-        #
-        # @return [Class]
-        def model_klass
-          reflection.class_name.constantize
-        end
-
         # Returns whether this is a single association (+has_one+ or +belongs_to+).
         #
         # @return [Boolean]
