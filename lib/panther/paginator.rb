@@ -4,6 +4,8 @@ module Panther
   #
   # @author Alessandro Desantis <desa.alessandro@gmail.com>
   class Paginator
+    SUPPORTED_ENGINES = [:will_paginate, :kaminari]
+
     # @!attribute [r] options
     #   @return [Hash] the options passed to the paginator
     attr_reader :options
@@ -11,16 +13,15 @@ module Panther
     # Initializes the paginator.
     #
     # @param options [Hash] the options hash
-    # @option options [Symbol|String] page_param the page number param's name
-    #   (+page+ by default)
-    # @options options [Symbol|String|FalseClass] per_page_param the per_page number param's name
-    #   (+per_page+ by default, +false+ to disable overriding the default)
-    # @options options [Fixnum] per_page the default per_page value (10 by default)
+    #
+    # @options options [Proc] page_proc A proc returning the current page. Receives the params hash
+    #   as argument.
+    # @options options [Proc] per_page_proc A proc returning the number of records to show on each
+    #   page. Receives the params hash as argument.
     def initialize(options = {})
       @options = {
-        page_param: :page,
-        per_page_param: :per_page,
-        per_page: 10
+        page_proc: -> (params) { params[:page] },
+        per_page_proc: -> (params) { params[:per_page] || 10 }
       }.merge(options)
     end
 
@@ -37,45 +38,28 @@ module Panther
     # @return [Object] the paginated relation
     def paginate(relation:, params:)
       pagination_params = extract_pagination_params_from params
-      send "paginate_with_#{pagination_engine}", { relation: relation }.merge(pagination_params)
+      engine_klass(detect_engine).paginate({ relation: relation }.merge(pagination_params))
     end
 
     private
 
-    def paginate_with_will_paginate(relation:, page:, per_page:)
-      relation.paginate(
-        page: page,
-        per_page: per_page
-      )
-    end
-
-    def paginate_with_kaminari(relation:, page:, per_page:)
-      relation.page(page).per(per_page)
-    end
-
     def extract_pagination_params_from(params)
-      page = params[options[:page_param]]
-
-      per_page = if options[:per_page_param] && params[options[:per_page_param]]
-        params[options[:per_page_param]]
-      else
-        options[:per_page]
-      end
-
       {
-        page: page,
-        per_page: per_page
+        page: options[:page_proc].call(params),
+        per_page: options[:per_page_proc].call(params)
       }
     end
 
-    def pagination_engine
-      if defined?(WillPaginate)
-        :will_paginate
-      elsif defined?(Kaminari)
-        :kaminari
-      else
-        fail 'Could not find a supported pagination library'
-      end
+    def detect_engine
+      SUPPORTED_ENGINES.detect do |engine|
+        engine_klass(engine).installed?
+      end || fail(
+        "Could not find a supported pagination library (#{SUPPORTED_ENGINES.join(', ')} supported"
+      )
+    end
+
+    def engine_klass(engine)
+      "#{self.class.name}::#{engine.to_s.camelize}Engine".constantize
     end
   end
 end
