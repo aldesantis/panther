@@ -34,11 +34,21 @@ module Panther
       #
       # @see #collection
       def call
-        relation = collection.paginate(page: params[:page])
+        relation = Paginator.new(paginator_options).paginate(relation: collection, params: params)
         respond_with resource: self.class.collection_representer_klass.new(relation)
       end
 
       protected
+
+      # Returns the options to forward to the {Paginator}. By default, this is an empty hash,
+      # so the {Paginator}'s defaults will be used.
+      #
+      # @return [Hash]
+      #
+      # @see Paginator
+      def paginator_options
+        {}
+      end
 
       # Returns the collection to expose in the operation.
       #
