@@ -30,8 +30,6 @@ module Panther
       #
       # Responds with the OK HTTP status code and the paginated collection.
       #
-      # The +page+ parameter is used for pagination.
-      #
       # @see #collection
       def call
         relation = Paginator.new(paginator_options).paginate(relation: collection, params: params)
