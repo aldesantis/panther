@@ -32,6 +32,62 @@ module Panther
       end
 
       module ClassMethods
+        # Configures sideloading for a +belongs_to+ association. This is just a shortcut for the
+        # following:
+        #
+        #   association name, type: :belongs_to
+        #
+        # @param name [Symbol] the association's name
+        # @param options [Hash] the options hash
+        #   (see {Reflection#initialize} for a list of available options)
+        #
+        # @see #association
+        def belongs_to(name, options = {})
+          association(name, options.merge(type: :belongs_to))
+        end
+
+        # Configures sideloading for a +has_one+ association. This is just a shortcut for the
+        # following:
+        #
+        #   association name, type: :has_one
+        #
+        # @param name [Symbol] the association's name
+        # @param options [Hash] the options hash
+        #   (see {Reflection#initialize} for a list of available options)
+        #
+        # @see #association
+        def has_one(name, options = {})
+          association(name, options.merge(type: :has_one))
+        end
+
+        # Configures sideloading for a +has_many+ association. This is just a shortcut for the
+        # following:
+        #
+        #   association name, type: :has_many
+        #
+        # @param name [Symbol] the association's name
+        # @param options [Hash] the options hash
+        #   (see {Reflection#initialize} for a list of available options)
+        #
+        # @see #association
+        def has_many(name, options = {})
+          association(name, options.merge(type: :has_many))
+        end
+
+        # Configures sideloading for a +has_and_belongs_to_many+ association. This is just a
+        # shortcut for the following:
+        #
+        #   association name, type: :has_and_belongs_to_many
+        #
+        # @param name [Symbol] the association's name
+        # @param options [Hash] the options hash
+        #   (see {Reflection#initialize} for a list of available options)
+        #
+        # @see #association
+        def has_and_belongs_to_many(name, options = {})
+          association(name, options.merge(type: :has_and_belongs_to_many))
+        end
+
         # Configures sideloading for the provided association.
         #
         # @param name [Symbol] the association's name
@@ -41,7 +97,7 @@ module Panther
         # @see Reflection#initialize
         def association(name, options = {})
           @associations[name.to_sym] = Reflection.new(name, options.merge(
-            decorator_klass: self
+            source_klass: self
           ))
 
           define_association_property name
