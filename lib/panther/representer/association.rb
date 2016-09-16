@@ -36,11 +36,9 @@ module Panther
         #
         # @param name [Symbol] the association's name
         # @param options [Hash] the options hash
+        #   (see {Reflection#initialize} for a list of available options)
         #
-        # @option options [TrueClass|FalseClass] :expose_id whether to expose the IDs of the
-        #   associated records when they are not being sideloaded
-        # @options options [Proc] if a condition that must be +true+ to show the association
-        # @options options [Proc] unless a condition that must be +false+ to show the association
+        # @see Reflection#initialize
         def association(name, options = {})
           @associations[name.to_sym] = Reflection.new(name, options.merge(
             decorator_klass: self

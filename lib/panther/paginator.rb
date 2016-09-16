@@ -15,22 +15,22 @@ module Panther
     # @param options [Hash] the options hash
     #
     # @options options [Proc] page_proc A proc returning the current page. Receives the params hash
-    #   as argument.
+    #   as argument. By default, uses the +page+ parameter.
     # @options options [Proc] per_page_proc A proc returning the number of records to show on each
-    #   page. Receives the params hash as argument.
+    #   page. Receives the params hash as argument. By default, uses the +per_page+ parameter or
+    #   10 records per page, if not present.
+    # @options options [Symbol] engine The pagination engine to use. By default, uses the first
+    #   available engine. See {SUPPORTED_ENGINES} for a list of supported engines and the order
+    #   in which they are detected.
     def initialize(options = {})
       @options = {
         page_proc: -> (params) { params[:page] },
-        per_page_proc: -> (params) { params[:per_page] || 10 }
+        per_page_proc: -> (params) { params[:per_page] || 10 },
+        engine: detect_engine
       }.merge(options)
     end
 
-    # Paginates a relation with the given params, with the first pagination engine found.
-    #
-    # Pagination engines are looked for in the following order:
-    #
-    # - Kaminari
-    # - will_paginate
+    # Paginates a relation with the given params.
     #
     # @param relation [Object] a paginatable relation
     # @param params [Hash] a params hash
@@ -38,7 +38,7 @@ module Panther
     # @return [Object] the paginated relation
     def paginate(relation:, params:)
       pagination_params = extract_pagination_params_from params
-      engine_klass(detect_engine).paginate({ relation: relation }.merge(pagination_params))
+      engine_klass(options[:engine]).paginate({ relation: relation }.merge(pagination_params))
     end
 
     private
