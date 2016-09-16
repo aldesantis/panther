@@ -7,6 +7,14 @@ module Panther
       #
       # @author Alessandro Desantis <desa.alessandro@gmail.com>
       class Binding
+        # @!attribute [r] association
+        #   @return [Reflection] the association we bind to
+        #
+        # @!attribute [r] model
+        #   @return [ActiveRecord::Base] the specific record we bind to
+        #
+        # @!attribute [r] user_options
+        #   @return [Hash] the user_options passed to the representer
         attr_reader :association, :model, :user_options
 
         # Initializes the binding.
@@ -66,7 +74,11 @@ module Panther
           value = model.send(association.name)
 
           if association.collection?
-            Paginator.new(association).paginate(relation: value, params: params)
+            Paginator.new(
+              page_param: association.options[:page_param],
+              per_page_param: association.options[:per_page_param],
+              per_page: association.options[:per_page],
+            ).paginate(relation: value, params: params)
           else
             value
           end
