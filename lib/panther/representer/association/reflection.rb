@@ -15,7 +15,7 @@ module Panther
         #   @return [Hash] the association's options
         attr_reader :name, :options
 
-        # Initializes the reflection.
+        # Initializes the reflection. The +type+ and +source_klass+ options are mandatory.
         #
         # @param name [String|Symbol] the association's name
         # @param options [Hash] the association's options
