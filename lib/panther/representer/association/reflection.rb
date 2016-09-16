@@ -34,6 +34,8 @@ module Panther
         # @options options [Proc] :per_page_proc collections only: a proc accepting the params hash
         #   and returning the number of records to show on each page (the default proc returns the
         #   +[association_name]_per_page+ param or 10 if it isn't present)
+        #
+        # @raise [ArgumentError] if the options are malformed
         def initialize(name, options = {})
           validate_options(options)
 
@@ -116,9 +118,13 @@ module Panther
             !input_options.has_key?(option)
           end
 
-          fail "Missing required options #{missing_options.join(', ')}" if missing_options.any?
+          fail(
+            ArgumentError,
+            "Missing required options #{missing_options.join(', ')}"
+          ) if missing_options.any?
 
           fail(
+            ArgumentError,
             "#{input_options[:type]} is an invalid association type"
           ) unless single_type?(input_options[:type]) || collection_type?(input_options[:type])
         end
