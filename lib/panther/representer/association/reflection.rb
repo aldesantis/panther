@@ -92,30 +92,29 @@ module Panther
         private
 
         def compute_options_from(base_options)
-          base_options[:expose_id] = true unless base_options.has_key?(:expose_id)
+          base_options[:expose_id] = true unless base_options.key?(:expose_id)
 
           if collection_type?(base_options[:type])
-            base_options[:page_proc] = proc { |params|
+            base_options[:page_proc] = proc do |params|
               params["#{name}_page"]
-            } unless base_options[:page_proc]
+            end unless base_options[:page_proc]
 
-            base_options[:per_page_proc] = proc { |params|
+            base_options[:per_page_proc] = proc do |params|
               params["#{name}_per_page"] || 10
-            } unless base_options[:per_page_proc]
+            end unless base_options[:per_page_proc]
           end
 
-          base_options[:resource_module] = (
-            ['', @namer.namespace_module, name.to_s.singularize.camelize]
-              .join('::')
-              .constantize
-          ) unless base_options[:resource_module]
+          unless base_options[:resource_module]
+            resource_module = "::#{@namer.namespace_module}::#{name.to_s.singularize.camelize}"
+            base_options[:resource_module] = resource_module.constantize
+          end
 
           base_options
         end
 
         def validate_options(input_options)
           missing_options = [:source_klass, :type].select do |option|
-            !input_options.has_key?(option)
+            !input_options.key?(option)
           end
 
           fail(

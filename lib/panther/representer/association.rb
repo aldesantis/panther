@@ -56,7 +56,7 @@ module Panther
         #   (see {Reflection#initialize} for a list of available options)
         #
         # @see #association
-        def has_one(name, options = {})
+        def has_one(name, options = {}) # rubocop:disable Style/PredicateName
           association(name, options.merge(type: :has_one))
         end
 
@@ -70,7 +70,7 @@ module Panther
         #   (see {Reflection#initialize} for a list of available options)
         #
         # @see #association
-        def has_many(name, options = {})
+        def has_many(name, options = {}) # rubocop:disable Style/PredicateName
           association(name, options.merge(type: :has_many))
         end
 
@@ -84,7 +84,7 @@ module Panther
         #   (see {Reflection#initialize} for a list of available options)
         #
         # @see #association
-        def has_and_belongs_to_many(name, options = {})
+        def has_and_belongs_to_many(name, options = {}) # rubocop:disable Style/PredicateName
           association(name, options.merge(type: :has_and_belongs_to_many))
         end
 
@@ -116,10 +116,10 @@ module Panther
 
           property(
             name,
-            if: proc { |user_options:, **args|
+            if: proc do |user_options:, **args|
               user_options[:include].include?(name.to_s) &&
               association.evaluate_conditions(args.merge(context: self, user_options: user_options))
-            },
+            end,
             exec_context: :decorator
           )
         end
@@ -147,10 +147,10 @@ module Panther
 
           property(
             property_name,
-            if: proc { |user_options:, **args|
+            if: proc do |user_options:, **args|
               !user_options[:include].include?(name.to_s) &&
               association.evaluate_conditions(args.merge(context: self, user_options: user_options))
-            },
+            end,
             exec_context: :decorator
           )
         end

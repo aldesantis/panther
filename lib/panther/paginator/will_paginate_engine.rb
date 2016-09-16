@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Panther
   class Paginator
     # will_paginate pagination engine

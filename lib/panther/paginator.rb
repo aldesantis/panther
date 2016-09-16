@@ -4,7 +4,7 @@ module Panther
   #
   # @author Alessandro Desantis <desa.alessandro@gmail.com>
   class Paginator
-    SUPPORTED_ENGINES = [:will_paginate, :kaminari]
+    SUPPORTED_ENGINES = [:will_paginate, :kaminari].freeze
 
     # @!attribute [r] options
     #   @return [Hash] the options passed to the paginator

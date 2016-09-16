@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Panther
   class Paginator
     # A pagination engine is simply a thiny wrapper around a pagination library (e.g. Kaminari,
@@ -27,7 +28,7 @@ module Panther
         # @return [ActiveRecord::Relation] the paginated relation
         #
         # @raise [NotImplementedError]
-        def paginate(relation:, page:, per_page:)
+        def paginate(*)
           fail NotImplementedError
         end
       end
