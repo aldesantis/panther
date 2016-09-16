@@ -39,11 +39,6 @@ module Panther
         #
         # @option options [TrueClass|FalseClass] :expose_id whether to expose the IDs of the
         #   associated records when they are not being sideloaded
-        # @option options [Symbol|String] page_param the page number param's name
-        #   (+page+ by default)
-        # @options options [Symbol|String|FalseClass] per_page_param the per_page number param's
-        #   name (+per_page+ by default, +false+ to disable overriding the default)
-        # @options options [Fixnum] per_page the default per_page value (10 by default)
         # @options options [Proc] if a condition that must be +true+ to show the association
         # @options options [Proc] unless a condition that must be +false+ to show the association
         def association(name, options = {})

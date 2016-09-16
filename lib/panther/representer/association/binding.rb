@@ -75,9 +75,8 @@ module Panther
 
           if association.collection?
             Paginator.new(
-              page_param: association.options[:page_param],
-              per_page_param: association.options[:per_page_param],
-              per_page: association.options[:per_page],
+              page_proc: -> (params) { params[association.options[:page_param]] },
+              per_page_proc: -> (params) { params[association.options[:per_page_param]] || association.options[:per_page] },
             ).paginate(relation: value, params: params)
           else
             value
