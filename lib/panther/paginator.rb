@@ -13,8 +13,8 @@ module Panther
     # @param options [Hash] the options hash
     # @option options [Symbol|String] page_param the page number param's name
     #   (+page+ by default)
-    # @options options [Symbol|String] per_page_param the per_page number param's name
-    #   (+per_page+ by default)
+    # @options options [Symbol|String|FalseClass] per_page_param the per_page number param's name
+    #   (+per_page+ by default, +false+ to disable overriding the default)
     # @options options [Fixnum] per_page the default per_page value (10 by default)
     def initialize(options = {})
       @options = {
@@ -56,7 +56,7 @@ module Panther
     def extract_pagination_params_from(params)
       page = params[options[:page_param]]
 
-      per_page = if params[options[:per_page_param]]
+      per_page = if options[:per_page_param] && params[options[:per_page_param]]
         params[options[:per_page_param]]
       else
         options[:per_page]

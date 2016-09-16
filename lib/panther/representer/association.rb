@@ -34,15 +34,18 @@ module Panther
       module ClassMethods
         # Configures sideloading for the provided association.
         #
-        # @param name [Symbol] The association's name
-        # @param options [Hash] The options hash
+        # @param name [Symbol] the association's name
+        # @param options [Hash] the options hash
         #
-        # @option options [TrueClass|FalseClass] :expose_id Whether to expose the IDs of the
+        # @option options [TrueClass|FalseClass] :expose_id whether to expose the IDs of the
         #   associated records when they are not being sideloaded
-        # @option options [Symbol] :page_param The name of the parameter containing the current page
-        # @option options [Fixnum] :per_page The default number of records to show per page
-        # @option options [Symbol|NilClass] :per_page_param The name of the parameter containing the
-        #   number of records to show per page, or +nil+ to disable the feature
+        # @option options [Symbol|String] page_param the page number param's name
+        #   (+page+ by default)
+        # @options options [Symbol|String|FalseClass] per_page_param the per_page number param's
+        #   name (+per_page+ by default, +false+ to disable overriding the default)
+        # @options options [Fixnum] per_page the default per_page value (10 by default)
+        # @options options [Proc] if a condition that must be +true+ to show the association
+        # @options options [Proc] unless a condition that must be +false+ to show the association
         def association(name, options = {})
           @associations[name.to_sym] = Reflection.new(name, options.merge(
             decorator_klass: self
