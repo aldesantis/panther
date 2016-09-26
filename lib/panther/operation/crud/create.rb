@@ -47,7 +47,7 @@ module Panther
       # @see #build_resource
       def call
         context.record = build_resource
-        context.contract = self.class.context.contract_klass.new(context.record)
+        context.contract = self.class.contract_klass.new(context.record)
 
         authorize_and_validate context.contract
 

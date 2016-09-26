@@ -29,7 +29,7 @@ module Panther
 
       def call
         context.record = self.class.resource_model.find(params[:id])
-        context.contract = self.class.contract_klass.new(record)
+        context.contract = self.class.contract_klass.new(context.record)
 
         authorize_and_validate context.contract
 
