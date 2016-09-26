@@ -28,14 +28,14 @@ module Panther
       end
 
       def call
-        record = self.class.resource_model.find(params[:id])
-        contract = self.class.contract_klass.new(record)
+        context.record = self.class.resource_model.find(params[:id])
+        context.contract = self.class.contract_klass.new(record)
 
-        authorize_and_validate contract
+        authorize_and_validate context.contract
 
-        contract.save
+        context.contract.save
 
-        respond_with resource: self.class.representer_klass.new(contract.model)
+        respond_with resource: self.class.representer_klass.new(context.contract.model)
       end
     end
   end

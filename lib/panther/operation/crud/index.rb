@@ -32,8 +32,12 @@ module Panther
       #
       # @see #collection
       def call
-        relation = Paginator.new(paginator_options).paginate(relation: collection, params: params)
-        respond_with resource: self.class.collection_representer_klass.new(relation)
+        context.relation = Paginator.new(paginator_options).paginate(
+          relation: collection,
+          params: params
+        )
+
+        respond_with resource: self.class.collection_representer_klass.new(context.relation)
       end
 
       protected

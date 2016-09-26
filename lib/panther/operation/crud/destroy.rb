@@ -25,11 +25,11 @@ module Panther
       #
       # Responds with the No Content HTTP status code and no resource.
       def call
-        record = self.class.resource_model.find(params[:id])
+        context.record = self.class.resource_model.find(params[:id])
 
-        authorize record
+        authorize context.record
 
-        record.destroy!
+        context.record.destroy!
 
         respond_with status: :no_content
       end

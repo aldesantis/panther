@@ -42,11 +42,11 @@ module Panther
       #
       # @see #find_resource
       def call
-        record = find_resource
+        context.record = find_resource
 
-        authorize record
+        authorize context.record
 
-        respond_with resource: self.class.representer_klass.new(record)
+        respond_with resource: self.class.representer_klass.new(context.record)
       end
 
       protected

@@ -46,16 +46,19 @@ module Panther
       #
       # @see #build_resource
       def call
-        record = build_resource
-        contract = self.class.contract_klass.new(record)
+        context.record = build_resource
+        context.contract = self.class.context.contract_klass.new(context.record)
 
-        authorize_and_validate contract
+        authorize_and_validate context.contract
 
-        contract.save
+        context.contract.save
 
-        fail! :invalid_contract, errors: record.errors unless record.persisted?
+        fail! :invalid_context.contract, errors: context.record.errors unless context.record.persisted?
 
-        respond_with resource: self.class.representer_klass.new(contract.model), status: :created
+        respond_with(
+          resource: self.class.representer_klass.new(contract.model),
+          status: :created
+        )
       end
 
       protected
