@@ -53,10 +53,10 @@ module Panther
 
         context.contract.save
 
-        fail! :invalid_context.contract, errors: context.record.errors unless context.record.persisted?
+        fail! :invalid_contract, errors: context.record.errors unless context.record.persisted?
 
         respond_with(
-          resource: self.class.representer_klass.new(contract.model),
+          resource: self.class.representer_klass.new(context.contract.model),
           status: :created
         )
       end
