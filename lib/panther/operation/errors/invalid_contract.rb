@@ -5,9 +5,9 @@ module Panther
       class InvalidContract < Base
         attr_reader :errors
 
-        def initialize(errors:)
+        def initialize(errors:, message: 'The contract for this operation was not respected')
           @errors = errors
-          super 'The contract for this operation was not respected'
+          super message
         end
 
         def status

@@ -5,12 +5,17 @@ module Panther
       class Unauthorized < Base
         attr_reader :resource, :user, :action
 
-        def initialize(resource:, user:, action:)
+        def initialize(
+          user:,
+          action:,
+          resource: nil,
+          message: 'You are not authorized to perform this operation'
+        )
           @resource = resource
           @user = user
           @action = action
 
-          super 'The current user is not authorized to perform the requested action'
+          super message
         end
 
         def status
