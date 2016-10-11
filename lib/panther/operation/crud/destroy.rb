@@ -25,13 +25,29 @@ module Panther
       #
       # Responds with the No Content HTTP status code and no resource.
       def call
-        context.record = self.class.resource_model.find(params[:id])
+        find_record
 
         authorize context.record
 
         context.record.destroy!
 
         respond_with status: :no_content
+      end
+
+      protected
+
+      # Returns the scope to use for finding the resource.
+      #
+      # @return [ActiveRecord::Relation]
+      def scope
+        self.class.resource_model.all
+      end
+
+      # Finds the resource. By default, uses the +id+ parameter.
+      #
+      # @return [ActiveRecord::Base]
+      def find_record
+        context.record ||= scope.find(params[:id])
       end
     end
   end

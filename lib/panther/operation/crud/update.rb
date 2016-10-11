@@ -38,8 +38,12 @@ module Panther
 
       protected
 
+      def scope
+        self.class.resource_model.all
+      end
+
       def find_record
-        context.record ||= self.class.resource_model.find(params[:id])
+        context.record ||= scope.find(params[:id])
       end
 
       def build_contract

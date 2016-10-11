@@ -29,7 +29,7 @@ module Panther
     #           class Show < ::Panther::Operation::Show
     #             protected
     #
-    #             def find_resource
+    #             def find_record
     #               ::Post.find_by!(slug: params[:id])
     #             end
     #           end
@@ -38,11 +38,11 @@ module Panther
     #     end
     #   end
     class Show < Base
-      # Finds the record with {#find_resource}, authorizes it and exposes it.
+      # Finds the record with {#find_record}, authorizes it and exposes it.
       #
-      # @see #find_resource
+      # @see #find_record
       def call
-        context.record = find_resource
+        find_record
 
         authorize context.record
 
@@ -51,11 +51,18 @@ module Panther
 
       protected
 
+      # Returns the scope to use for finding the resource.
+      #
+      # @return [ActiveRecord::Relation]
+      def scope
+        self.class.resource_model.all
+      end
+
       # Finds the resource. By default, uses the +id+ parameter.
       #
       # @return [ActiveRecord::Base]
-      def find_resource
-        self.class.resource_model.find(params[:id])
+      def find_record
+        context.record ||= scope.find(params[:id])
       end
     end
   end
