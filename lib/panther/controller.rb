@@ -27,7 +27,12 @@ module Panther
       #
       # @return [Boolean] Whether the operation is supported
       def supports?(operation)
-        defined?(operation_klass(operation))
+        begin
+          operation_klass(operation).constantize
+          true
+        rescue NameError
+          false
+        end
       end
 
       # Returns the module encapsulating the resource
@@ -67,11 +72,16 @@ module Panther
       end
     end
 
-    %i(index show create update destroy).each do |operation|
-      define_method operation do
-        ensure_operation_exists operation
-        run self.class.operation_klass(operation)
+    def action_missing(name)
+      if self.class.supports?(name)
+        run self.class.operation_klass(name)
+      else
+        super
       end
+    end
+
+    def respond_to_missing?(method_name, include_private = false)
+      self.class.supports?(method_name) || super
     end
 
     protected
@@ -128,18 +138,6 @@ module Panther
     # @raise NotImplementedError
     def panther_user
       fail NotImplementedError
-    end
-
-    private
-
-    def ensure_operation_exists(operation)
-      return if self.class.supports?(operation)
-
-      message = <<~ERROR.tr("\n", ' ').strip
-        Expected #{operation} to be handled by #{operation_klass}, but the class is undefined
-      ERROR
-
-      fail NotImplementedError, message
     end
   end
 end
