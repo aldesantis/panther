@@ -43,11 +43,15 @@ module Panther
       end
 
       def find_record
-        context.record ||= scope.find(params[:id])
+        scope.find(params[:id])
+      end
+
+      def load_record
+        context.record ||= find_record
       end
 
       def build_contract
-        context.contract ||= self.class.contract_klass.new(find_record)
+        context.contract ||= self.class.contract_klass.new(load_record)
       end
     end
   end

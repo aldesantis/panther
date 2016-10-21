@@ -25,7 +25,7 @@ module Panther
       #
       # Responds with the No Content HTTP status code and no resource.
       def call
-        find_record
+        load_record
 
         authorize context.record
 
@@ -47,7 +47,11 @@ module Panther
       #
       # @return [ActiveRecord::Base]
       def find_record
-        context.record ||= scope.find(params[:id])
+        scope.find(params[:id])
+      end
+
+      def load_record
+        context.record ||= find_record
       end
     end
   end
