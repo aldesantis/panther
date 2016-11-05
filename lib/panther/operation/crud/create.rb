@@ -7,7 +7,7 @@ module Panther
     #
     # @author Alessandro Desantis <desa.alessandro@gmail.com>
     #
-    # @abstract Subclass and override {#build_resource} to implement a create operation
+    # @abstract Subclass to implement a create operation
     #
     # @example A basic create operation
     #   module API
@@ -15,11 +15,6 @@ module Panther
     #       module User
     #         module Operation
     #           class Create < ::Panther::Operation::Create
-    #             protected
-    #
-    #             def build_resource
-    #               ::User.new
-    #             end
     #           end
     #         end
     #       end
@@ -32,7 +27,7 @@ module Panther
         # If the operation's class is +API::V1::User::Operation::Create+, returns
         # +API::V1::User::Contract::Create+.
         #
-        # @return [Contract::Base]
+        # @return [Class]
         def contract_klass
           resource_module::Contract::Create
         end
@@ -44,10 +39,11 @@ module Panther
       # If it was not persisted, responds with the Unprocessable Entity HTTP status code and the
       # validation errors.
       #
-      # @see #build_resource
+      # @see #build_record
+      # @see #build_contract
       def call
-        context.record = build_resource
-        context.contract = self.class.contract_klass.new(context.record)
+        context.record = build_record
+        context.contract = build_contract
 
         authorize_and_validate context.contract
 
@@ -77,7 +73,7 @@ module Panther
       #           class Create < ::Panther::Operation::Create
       #             protected
       #
-      #             def build_resource
+      #             def build_record
       #               ::Post.new(author: params[:current_user])
       #             end
       #           end
@@ -85,8 +81,15 @@ module Panther
       #       end
       #     end
       #   end
-      def build_resource
-        fail NotImplementedError
+      def build_record
+        self.class.resource_model.new
+      end
+
+      # Builds a contract for the new resource.
+      #
+      # @return [Contract::Base]
+      def build_contract
+        self.class.contract_klass.new(context.record)
       end
     end
   end

@@ -42,7 +42,7 @@ module Panther
       #
       # @see #find_record
       def call
-        load_record
+        context.record = find_record
 
         authorize context.record
 
@@ -51,22 +51,11 @@ module Panther
 
       protected
 
-      # Returns the scope to use for finding the resource.
-      #
-      # @return [ActiveRecord::Relation]
-      def scope
-        self.class.resource_model.all
-      end
-
       # Finds the resource. By default, uses the +id+ parameter.
       #
       # @return [ActiveRecord::Base]
       def find_record
-        scope.find(params[:id])
-      end
-
-      def load_record
-        context.record ||= find_record
+        self.class.resource_model.find(params[:id])
       end
     end
   end
