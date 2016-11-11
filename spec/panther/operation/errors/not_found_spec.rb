@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Panther::Operation::Errors::NotFound do
   subject { described_class.new }
 

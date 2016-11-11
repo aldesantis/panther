@@ -24,8 +24,8 @@ module Panther
     #   in which they are detected.
     def initialize(options = {})
       @options = {
-        page_proc: -> (params) { params[:page] },
-        per_page_proc: -> (params) { params[:per_page] || 10 },
+        page_proc: ->(params) { params[:page] },
+        per_page_proc: ->(params) { params[:per_page] || 10 },
         engine: detect_engine
       }.merge(options)
     end

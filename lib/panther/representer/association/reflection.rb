@@ -95,13 +95,17 @@ module Panther
           base_options[:expose_id] = true unless base_options.key?(:expose_id)
 
           if collection_type?(base_options[:type])
-            base_options[:page_proc] = proc do |params|
-              params["#{name}_page"]
-            end unless base_options[:page_proc]
+            unless base_options[:page_proc]
+              base_options[:page_proc] = proc do |params|
+                params["#{name}_page"]
+              end
+            end
 
-            base_options[:per_page_proc] = proc do |params|
-              params["#{name}_per_page"] || 10
-            end unless base_options[:per_page_proc]
+            unless base_options[:per_page_proc]
+              base_options[:per_page_proc] = proc do |params|
+                params["#{name}_per_page"] || 10
+              end
+            end
           end
 
           unless base_options[:resource_module]
@@ -117,15 +121,19 @@ module Panther
             !input_options.key?(option)
           end
 
-          fail(
-            ArgumentError,
-            "Missing required options #{missing_options.join(', ')}"
-          ) if missing_options.any?
+          if missing_options.any?
+            fail(
+              ArgumentError,
+              "Missing required options #{missing_options.join(', ')}"
+            )
+          end
 
-          fail(
-            ArgumentError,
-            "#{input_options[:type]} is an invalid association type"
-          ) unless single_type?(input_options[:type]) || collection_type?(input_options[:type])
+          unless single_type?(input_options[:type]) || collection_type?(input_options[:type])
+            fail(
+              ArgumentError,
+              "#{input_options[:type]} is an invalid association type"
+            )
+          end
         end
 
         def single_type?(type)

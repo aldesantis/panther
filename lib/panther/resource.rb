@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Panther
   # A resource is anything in your API that can be operated on (e.g. users, posts, orders etc.).
   # It can expose a policy, operations, representers and contracts.

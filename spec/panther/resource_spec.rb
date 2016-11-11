@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Panther::Resource do
   before(:all) do
     module API

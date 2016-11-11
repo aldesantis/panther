@@ -67,10 +67,12 @@ module Panther
       #     end
       #   end
       def validate!(resource:)
-        fail(
-          Operation::Errors::InvalidContract,
-          errors: resource.errors
-        ) unless validate(resource: resource)
+        unless validate(resource: resource)
+          fail(
+            Operation::Errors::InvalidContract,
+            errors: resource.errors
+          )
+        end
       end
 
       private

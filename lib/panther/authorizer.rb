@@ -63,16 +63,18 @@ module Panther
       #     end
       #   end
       def authorize!(resource:, operation:, user:)
-        fail(
-          Operation::Errors::Unauthorized,
-          resource: resource,
-          user: user,
-          action: operation.policy_klass
-        ) unless authorize(
+        unless authorize(
           resource: resource,
           operation: operation,
           user: user
         )
+          fail(
+            Operation::Errors::Unauthorized,
+            resource: resource,
+            user: user,
+            action: operation.policy_klass
+          )
+        end
       end
     end
   end

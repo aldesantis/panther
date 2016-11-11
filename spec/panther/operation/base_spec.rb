@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Panther::Operation::Base do
   before(:all) do
     module API
@@ -15,7 +16,7 @@ RSpec.describe Panther::Operation::Base do
 
   subject { API::V1::Post::Operation::Create.new(params: params) }
 
-  let(:params) { { current_user: OpenStruct.new }}
+  let(:params) { { current_user: OpenStruct.new } }
 
   describe '.operation_name' do
     it 'returns the name of the operation' do

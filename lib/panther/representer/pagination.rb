@@ -2,7 +2,7 @@
 module Panther
   module Representer
     module Pagination
-      def self.included(klass) # rubocop:disable Metrics/MethodLength
+      def self.included(klass)
         klass.class_eval <<-RUBY
           def current_page
             represented.current_page

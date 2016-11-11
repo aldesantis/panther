@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Panther::Operation::Errors::Forbidden do
   subject { described_class.new }
 
