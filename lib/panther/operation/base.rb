@@ -41,14 +41,12 @@ module Panther
     class Base
       include Interactor
 
-      include Naming
-      include Authorization
-      include Validation
-
       class << self
         def inherited(klass)
           klass.class_eval do
-            include Hooks
+            after :ensure_status
+            around :handle_errors
+            around :convert_errors
           end
         end
 
@@ -63,22 +61,53 @@ module Panther
         end
       end
 
-      # Executes the operation
+      # Alias to {.operation_name}.
+      #
+      # @return [String]
+      def operation_name
+        self.class.operation_name
+      end
+
+      # Executes the operation.
       #
       # @see https://github.com/collectiveidea/interactor Interactor
       def call
         fail NotImplementedError
       end
 
-      protected
-
-      # Returns the operation's params
+      # Returns the operation's params.
       #
       # This is just a shortcut for retrieving +context.params+.
       #
       # @return [Hash]
       def params
         context.params
+      end
+
+      # Returns the +:current_user+ param.
+      #
+      # @return [Hash]
+      def current_user
+        params[:current_user]
+      end
+
+      # Calls {Autorizer.authorize!} with the given resource.
+      #
+      # @see Authorizer.authorize!
+      # @see Naming
+      def authorize(resource)
+        Authorizer.authorize!(
+          resource: resource,
+          user: current_user,
+          operation: self.class
+        )
+      end
+
+      # Calls {Validator.validate!} with the given resource.
+      #
+      # @see Validator.validate!
+      def validate(resource)
+        Validator.validate! resource: resource
       end
 
       # Writes the parameters to the given resource, then authorizes it and validates it.
@@ -137,6 +166,22 @@ module Panther
         when Contract::Base
           resource.deserialize(params)
         end
+      end
+
+      def ensure_status
+        context.status = context.resource ? :ok : :no_content
+      end
+
+      def convert_errors(interactor)
+        interactor.call
+      rescue ActiveRecord::RecordNotFound
+        fail! :not_found
+      end
+
+      def handle_errors(interactor)
+        interactor.call
+      rescue Errors::Base => e
+        context.fail!(resource: e, status: e.status)
       end
     end
   end

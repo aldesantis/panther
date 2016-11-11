@@ -10,9 +10,6 @@ require 'interactor'
 
 require 'panther/version'
 
-require 'panther/namer'
-require 'panther/naming'
-
 require 'panther/contract/base'
 require 'panther/contract/types'
 
@@ -33,9 +30,6 @@ require 'panther/paginator/engine'
 require 'panther/paginator/will_paginate_engine'
 require 'panther/paginator/kaminari_engine'
 
-require 'panther/operation/mixins/authorization'
-require 'panther/operation/mixins/validation'
-require 'panther/operation/mixins/hooks'
 require 'panther/operation/base'
 require 'panther/operation/errors/base'
 require 'panther/operation/errors/invalid_contract'
