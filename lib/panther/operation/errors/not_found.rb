@@ -6,9 +6,13 @@ module Panther
       #
       # @author Alessandro Desantis
       class NotFound < Base
+        MESSAGE = 'The requested resource could not be found.'
+
         # Initializes the error.
-        def initialize
-          super 'The requested resource could not be found.'
+        #
+        # @param meta [Hash] any meta to attach to the error
+        def initialize(meta = {})
+          super MESSAGE, meta
         end
 
         # Returns +:not_found+ (404 Not Found).

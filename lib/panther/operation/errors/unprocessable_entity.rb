@@ -2,11 +2,11 @@
 module Panther
   module Operation
     module Errors
-      # This error occurs when a user attempts an unauthorized operation.
+      # This error occurs when a contract fails validation.
       #
       # @author Alessandro Desantis
-      class Forbidden < Base
-        MESSAGE = 'You are not authorized to perform this operation.'
+      class UnprocessableEntity < Base
+        MESSAGE = 'Your request does not respect the contract for this operation.'
 
         # Initializes the error.
         #
@@ -15,11 +15,11 @@ module Panther
           super MESSAGE, meta
         end
 
-        # Returns +:forbidden+ (403 Forbidden).
+        # Returns +:unprocessable_entity+ (422 Unprocessable Entity).
         #
         # @return [Symbol]
         def status
-          :forbidden
+          :unprocessable_entity
         end
       end
     end

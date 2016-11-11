@@ -24,17 +24,21 @@ require 'panther/representer/association/reflection'
 require 'panther/representer/association/binding'
 
 require 'panther/authorizer'
+
 require 'panther/validator'
+
 require 'panther/paginator'
 require 'panther/paginator/engine'
 require 'panther/paginator/will_paginate_engine'
 require 'panther/paginator/kaminari_engine'
 
 require 'panther/operation/base'
+
 require 'panther/operation/errors/base'
-require 'panther/operation/errors/invalid_contract'
-require 'panther/operation/errors/unauthorized'
+require 'panther/operation/errors/unprocessable_entity'
+require 'panther/operation/errors/forbidden'
 require 'panther/operation/errors/not_found'
+
 require 'panther/operation/crud/index'
 require 'panther/operation/crud/show'
 require 'panther/operation/crud/create'

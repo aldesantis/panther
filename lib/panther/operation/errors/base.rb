@@ -7,6 +7,19 @@ module Panther
       #
       # @author Alessandro Desantis
       class Base < StandardError
+        # @!attribute [r] meta
+        #   @return [Hash] any meta to attach to the error
+        attr_reader :meta
+
+        # Initializes the error.
+        #
+        # @param message [String] the error message
+        # @param meta [Hash] any meta to attach to the error
+        def initialize(message, meta = {})
+          @meta = meta
+          super message
+        end
+
         # Converts the error into a hash suitable for JSON representation.
         #
         # This is a simple hash with the +error+, +message+ and +meta+ keys.
@@ -14,30 +27,30 @@ module Panther
         # @return [Hash]
         def as_json(_options)
           {
-            error: status,
+            error: type,
             message: message,
             meta: meta
-          )
+          }
         end
 
-        # Returns the HTTP status code to use for this error. By default, this is
-        # +:internal_server_error+ (500 Internal Server Error).
+        # Returns the HTTP status code to use for this error.
         #
         # @return [Symbol]
+        #
+        # @raise [NotImplmentedError]
         def status
-          :internal_server_error
+          fail NotImplementedError
         end
 
-        protected
-
-        # Returns any metadata that should be attached to the basic error information.
+        # Returns a machine-readable error type. By default, returns {#status}.
         #
-        # In the case of a validation error, for instance, this could be used to send the exact
-        # errors that occured.
+        # You might want to change this to something more specific: a 403 Forbidden error, for
+        # instance, might have many different meanings and a client could use this field to decide
+        # how to handle the error.
         #
-        # @return [Hash]
-        def meta
-          {}
+        # @return [Symbol]
+        def type
+          status
         end
       end
     end
