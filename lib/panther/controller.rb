@@ -27,12 +27,10 @@ module Panther
       #
       # @return [Boolean] Whether the operation is supported
       def supports?(operation)
-        begin
-          operation_klass(operation).constantize
-          true
-        rescue NameError
-          false
-        end
+        operation_klass(operation).constantize
+        true
+      rescue NameError
+        false
       end
 
       # Returns the module encapsulating the resource

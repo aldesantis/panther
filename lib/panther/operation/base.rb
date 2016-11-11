@@ -116,7 +116,6 @@ module Panther
       #
       # @param error [Symbol] The error to raise
       #
-      # @raise [RuntimeError] If the given error is not a valid Panther error
       # @raise [Panther::Operation::Errors::Base] The provided Panther error
       #
       # @example Raising an authorization error
@@ -124,7 +123,6 @@ module Panther
       #   fail! :unauthorized, resource: resource, user: current_user, action: :create
       def fail!(error, *args)
         klass_name = "::Panther::Operation::Errors::#{error.to_s.camelize}"
-        fail "#{error} is not a defined error" unless defined?(klass_name.constantize)
         fail klass_name.constantize, *args
       end
 
