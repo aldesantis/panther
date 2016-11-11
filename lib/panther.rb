@@ -36,8 +36,12 @@ require 'panther/operation/base'
 
 require 'panther/operation/errors/base'
 require 'panther/operation/errors/unprocessable_entity'
+require 'panther/operation/errors/unauthorized'
 require 'panther/operation/errors/forbidden'
 require 'panther/operation/errors/not_found'
+require 'panther/operation/errors/conflict'
+require 'panther/operation/errors/payment_required'
+require 'panther/operation/errors/too_many_requests'
 
 require 'panther/operation/crud/index'
 require 'panther/operation/crud/show'
