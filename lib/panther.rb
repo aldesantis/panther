@@ -49,5 +49,7 @@ require 'panther/operation/crud/destroy'
 
 require 'panther/controller'
 
+require 'panther/resource'
+
 module Panther
 end
