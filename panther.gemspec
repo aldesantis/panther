@@ -19,8 +19,8 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'reform', '~> 2.2.1'
-  spec.add_dependency 'dry-types', '~> 0.8.1'
-  spec.add_dependency 'dry-logic', '0.3.0' # https://github.com/dry-rb/dry-types/issues/149
+  spec.add_dependency 'dry-types', '~> 0.9.1'
+  spec.add_dependency 'dry-logic', '~> 0.4.0'
   spec.add_dependency 'multi_json', '~> 1.12.1'
   spec.add_dependency 'responders', '~> 2.3.0'
   spec.add_dependency 'interactor', '~> 3.1.0'
