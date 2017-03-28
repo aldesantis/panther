@@ -1,5 +1,8 @@
 # Panther
 
+**DEPRECATION NOTICE: Panther has been superseded by [Pragma](https://github.com/pragmarb/pragma), an
+ecosystem for building RESTful APIs with Rails. Check it out!**
+
 [![Build Status](https://img.shields.io/travis/alessandro1997/panther.svg?maxAge=3600&style=flat-square)](https://travis-ci.org/alessandro1997/panther)
 [![Dependency Status](https://img.shields.io/gemnasium/alessandro1997/panther.svg?maxAge=3600&style=flat-square)](https://gemnasium.com/github.com/alessandro1997/panther)
 [![Code Climate](https://img.shields.io/codeclimate/github/alessandro1997/panther.svg?maxAge=3600&style=flat-square)](https://codeclimate.com/github/alessandro1997/panther)
